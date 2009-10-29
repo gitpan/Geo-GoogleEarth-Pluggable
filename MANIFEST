@@ -1,0 +1,22 @@
+Changes
+lib/Geo/GoogleEarth/Pluggable.pm
+lib/Geo/GoogleEarth/Pluggable/Base.pm
+lib/Geo/GoogleEarth/Pluggable/Contrib/Address.pm
+lib/Geo/GoogleEarth/Pluggable/Contrib/LinearRing.pm
+lib/Geo/GoogleEarth/Pluggable/Contrib/Point.pm
+lib/Geo/GoogleEarth/Pluggable/Folder.pm
+lib/Geo/GoogleEarth/Pluggable/NetworkLink.pm
+lib/Geo/GoogleEarth/Pluggable/Placemark.pm
+lib/Geo/GoogleEarth/Pluggable/Plugin/Default.pm
+lib/Geo/GoogleEarth/Pluggable/Plugin/LinearRing.pm
+lib/Geo/GoogleEarth/Pluggable/Style.pm
+LICENSE
+Makefile.PL
+MANIFEST
+README
+scripts/Geo-GoogleEarth-Pluggable-Folder.pl
+scripts/Geo-GoogleEarth-Pluggable-Folders_with_Points.pl
+scripts/Geo-GoogleEarth-Pluggable-Point.pl
+t/001_load.t
+Todo
+META.yml                                 Module meta-data (added by MakeMaker)
