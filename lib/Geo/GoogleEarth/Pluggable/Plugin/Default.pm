@@ -2,7 +2,10 @@ package Geo::GoogleEarth::Pluggable::Plugin::Default;
 use strict;
 use warnings;
 use Geo::GoogleEarth::Pluggable::Contrib::Point;
-#use Geo::GoogleEarth::Pluggable::Contrib::Address;
+use Geo::GoogleEarth::Pluggable::Contrib::LineString;
+use Geo::GoogleEarth::Pluggable::Contrib::LinearRing;
+
+our $VERSION='0.02';
 
 =head1 NAME
 
@@ -25,7 +28,10 @@ The package should be named after the plugin not the objects since there is a ma
 
 Constructs a new Placemark Point object and appends it to the parent folder object.  Returns the object reference if you need to make any setting changes after construction.
 
-  $folder->Point(name=>"My Placemark", lat=>38.897607, lon=>-77.036554, alt=>0);
+  my $point=$folder->Point(name=>"My Placemark",
+                           lat=>38.897607,
+                           lon=>-77.036554,
+                           alt=>0);
 
 =cut
 
@@ -36,18 +42,36 @@ sub Point {
   return $obj;
 }
 
-=head2 Address
+=head2 LineString
 
-Constructs a new Placemark Point object and appends it to the parent folder object.  Returns the object reference if you need to make any setting changes after construction.
-
-  my $placemark=$folder->Address(name=>"My Placemark Address",
-                               address=>"1600 Pennsylvania Ave NW, Washington, DC");
+  $folder->LineString(name=>"My Placemark",
+                      coordinates=>[
+                                     [lat,lon,alt],
+                                     {lat=>$lat,lon=>$lon,alt=>$alt},
+                                   ]);
 
 =cut
 
-sub Address {
-  my $self=shift; #This will be a Geo::GoogleEarth::Pluggable::Folder object
-  my $obj=Geo::GoogleEarth::Pluggable::Contrib::Address->new(@_);
+sub LineString {
+  my $self=shift;
+  my $obj=Geo::GoogleEarth::Pluggable::Contrib::LineString->new(@_);
+  $self->data($obj);
+  return $obj;
+}
+
+=head2 LinearRing
+
+  $folder->LinearRing(name=>"My Placemark",
+                      coordinates=>[
+                                     [lat,lon,alt],
+                                     [lat,lon,alt],
+                                   ]);
+
+=cut
+
+sub LinearRing {
+  my $self=shift;
+  my $obj=Geo::GoogleEarth::Pluggable::Contrib::LinearRing->new(@_);
   $self->data($obj);
   return $obj;
 }

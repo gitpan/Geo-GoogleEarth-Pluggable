@@ -2,9 +2,11 @@ package Geo::GoogleEarth::Pluggable::Base;
 use strict;
 use warnings;
 
+our $VERSION='0.02';
+
 =head1 NAME
 
-Geo::GoogleEarth::Pluggable::Base - Base for Geo::GoogleEarth::Pluggable::* packages
+Geo::GoogleEarth::Pluggable::Base - Geo::GoogleEarth::Pluggable Base package
 
 =head1 SYNOPSIS
 

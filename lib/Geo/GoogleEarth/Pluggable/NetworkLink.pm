@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use base qw{Geo::GoogleEarth::Pluggable::Base};
 
-our $VERSION='0.01';
+our $VERSION='0.02';
 
 =head1 NAME
 
@@ -46,15 +46,12 @@ Returns a hash reference for feeding directly into L<XML::Simple>.
 =cut
 
 sub structure {
-  my $self=shift();
-  my $structure={name=>[$self->name]};
-  $structure->{'Link'}={href=>[$self->url]};
-  my %skip=map {$_=>1} qw{name Link}; 
-  foreach my $key (keys %$self) {
-    next if exists $skip{$key};
-    $structure->{$key}=[$self->{$key}];
-  }
-  return $structure;
+  my $self=shift;
+  my %data=%$self;
+  $data{"Link"}={href=>[$self->url]};
+  delete(@data{qw{url document}});
+  $data{$_}=[$data{$_}] foreach keys %data;
+  return \%data; 
 }
 
 =head2 url
@@ -82,14 +79,14 @@ Try geo-perl email list.
 
 =head1 AUTHOR
 
-    Michael R. Davis (mrdvt92)
-    CPAN ID: MRDVT
+  Michael R. Davis (mrdvt92)
+  CPAN ID: MRDVT
 
 =head1 COPYRIGHT
 
 This program is free software licensed under the...
 
-	The BSD License
+  The BSD License
 
 The full text of the license can be found in the
 LICENSE file included with this module.

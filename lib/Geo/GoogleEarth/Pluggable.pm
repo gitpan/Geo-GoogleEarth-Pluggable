@@ -6,7 +6,7 @@ use XML::Simple qw{};
 use Archive::Zip qw{COMPRESSION_DEFLATED};
 use IO::Scalar qw{};
 
-our $VERSION='0.01';
+our $VERSION='0.02';
 
 =head1 NAME
 
@@ -88,6 +88,24 @@ sub Style {
   $self->data($obj);
   return $obj;
 }
+
+=head1 TODO
+
+=over
+
+=item Full support for LookAt and Style, and StyleMap
+
+=item Support for default Polygon and Line styles that are nicer than GoogleEarth's
+
+=item Support for DateTime object in the constructor that is promoted to the LookAt object.
+
+=item Support for Point(coordinates=>[{},[],...]) (multiple name.$#coordinates)
+
+=item Create a Great circle to LineString plugin
+
+=item Create a GPSPoint plugin (Promote tag as name and datetime to LookAt)
+
+=back
 
 =head1 BUGS
 

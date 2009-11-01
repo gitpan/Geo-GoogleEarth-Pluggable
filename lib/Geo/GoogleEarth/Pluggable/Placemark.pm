@@ -4,6 +4,8 @@ use strict;
 use warnings;
 use Scalar::Util qw{reftype};
 
+our $VERSION='0.02';
+
 =head1 NAME
 
 Geo::GoogleEarth::Pluggable::Placemark - Base for Geo::GoogleEarth::Pluggable Placemarks
@@ -168,7 +170,7 @@ sub point_stringify {
     $data->{'lat'}=$point->{'lat'}||$point->{'latitude'};
     $data->{'lon'}=$point->{'lon'}||$point->{'long'}||$point->{'longitude'};
     $data->{'alt'}=$point->{'alt'}||$point->{'altitude'}||
-                   $point->{'elevation'}||$point->{'hae'}||$point->{'elev'};
+                   $point->{'elevation'}||$point->{'hae'}||$point->{'elev'}||0;
   } elsif (reftype($point) eq "ARRAY") {
     #[$lon, $lat, $alt]
     $data->{'lon'}=$point->[0];

@@ -1,13 +1,13 @@
 package Geo::GoogleEarth::Pluggable::Style;
-use strict;
-use warnings;
 use base qw{Geo::GoogleEarth::Pluggable::Base};
+use warnings;
+use strict;
 
-our $VERSION='0.01';
+our $VERSION='0.02';
 
 =head1 NAME
 
-Geo::GoogleEarth::Pluggable::Style - Geo::GoogleEarth::Pluggable::Style
+Geo::GoogleEarth::Pluggable::Style - Geo::GoogleEarth::Pluggable Style Object
 
 =head1 SYNOPSIS
 
