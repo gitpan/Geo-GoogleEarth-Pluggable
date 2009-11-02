@@ -6,7 +6,7 @@ use XML::Simple qw{};
 use Archive::Zip qw{COMPRESSION_DEFLATED};
 use IO::Scalar qw{};
 
-our $VERSION='0.02';
+our $VERSION='0.03';
 
 =head1 NAME
 
@@ -17,7 +17,7 @@ Geo::GoogleEarth::Pluggable - Generates GoogleEarth Documents
   use Geo::GoogleEarth::Pluggable;
   my $document    = Geo::GoogleEarth::Pluggable->new(); #is a special Folder...
   my $folder      = $document->Folder();                #Geo::GoogleEarth::Pluggable::Folder object
-  my $placemark   = $document->Placemark();             #Geo::GoogleEarth::Pluggable::Placemark object
+  my $placemark   = $document->Point();             #Geo::GoogleEarth::Pluggable::Point object
   my $networklink = $document->NetworkLink();           #Geo::GoogleEarth::Pluggable::NetworkLink object
   my $style = $document->Style();                       #Geo::GoogleEarth::Pluggable::Style object
   print $document->render();
@@ -34,7 +34,7 @@ This is all of the code you need to generate a complete Google Earth document.
 
   use Geo::GoogleEarth::Pluggable;
   my $document=Geo::GoogleEarth::Pluggable->new;
-  $document->Placemark(address=>"1600 Pennsylvania Ave NW, Washington, DC");
+  $document->Point(name=>"White House", lat=>38.897337, lon=>-77.036503);
   print $document->render;
 
 =head2 render
@@ -48,7 +48,7 @@ Returns an XML document with an XML declaration and a root name of "Document"
 sub render {
   my $self=shift();
   my $xs=XML::Simple->new(XMLDecl=>1, RootName=>q{kml}, ForceArray=>1);
-  return $xs->XMLout({xmlns=>"http://earth.google.com/kml/2.2", Document=>[$self->structure]});
+  return $xs->XMLout({$self->xmlns, Document=>[$self->structure]});
 }
 
 =head2 archive
@@ -89,6 +89,23 @@ sub Style {
   return $obj;
 }
 
+=head2 xmlns
+
+=cut
+
+sub xmlns {
+  my $self=shift;
+  unless (defined($self->{'xmlns'})) {
+    $self->{'xmlns'}={
+            'xmlns'      => "http://www.opengis.net/kml/2.2",
+            'xmlns:gx'   => "http://www.google.com/kml/ext/2.2",
+            'xmlns:kml'  => "http://www.opengis.net/kml/2.2",
+            'xmlns:atom' => "http://www.w3.org/2005/Atom",
+                     };
+  }
+  return wantarray ? %{$self->{'xmlns'}} : $self->{'xmlns'};
+}
+
 =head1 TODO
 
 =over
@@ -108,6 +125,8 @@ sub Style {
 =back
 
 =head1 BUGS
+
+Please log on RT and send to the geo-perl email list.
 
 =head1 SUPPORT
 
@@ -137,7 +156,7 @@ L<Geo::GoogleEarth::Pluggable::Folder> is a Geo::GoogleEarth::Pluggable folder o
 
 L<Geo::GoogleEarth::Pluggable::NetworkLink> is a Geo::GoogleEarth::Pluggable NetworkLink object.
 
-L<Geo::GoogleEarth::Pluggable::Placemark> is a Geo::GoogleEarth::Pluggable Placemark object.
+L<Geo::GoogleEarth::Pluggable::Placemark> is a Geo::GoogleEarth::Pluggable Placemark base object.
 
 L<Geo::GoogleEarth::Pluggable::Style> is a Geo::GoogleEarth::Pluggable Style object.
 

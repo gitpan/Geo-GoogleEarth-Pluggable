@@ -3,7 +3,7 @@ use base qw{Geo::GoogleEarth::Pluggable::Placemark};
 use warnings;
 use strict;
 
-our $VERSION='0.01';
+our $VERSION='0.03';
 
 =head1 NAME
 
@@ -107,6 +107,8 @@ sub alt {
 }
 
 =head1 BUGS
+
+Please log on RT and send to the geo-perl email list.
 
 =head1 SUPPORT
 

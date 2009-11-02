@@ -11,11 +11,11 @@ our $VERSION='0.02';
 
 Geo::GoogleEarth::Pluggable::Plugin::Default - Geo::GoogleEarth::Pluggable Default Plugin Methods
 
-=head2 METHODS
+=head1 METHODS
 
 Methods in this package are AUTOLOADed into the  Geo::GoogleEarth::Pluggable::Folder namespace at runtime.
 
-=head2 CONVENTIONS
+=head1 CONVENTIONS
 
 Plugin Naming Convention: Geo::GoogleEarth::Pluggable::Plugin::CPANID (e.g. "MRDVT")
 Object Naming Convention: Geo::GoogleEarth::Pluggable::Contrib::"$method" (e.g. Point, CircleByCenterPoint)
@@ -75,5 +75,49 @@ sub LinearRing {
   $self->data($obj);
   return $obj;
 }
+
+=head1 TODO
+
+Need to determine what methods should be in the Folder package and what should be on the Plugin/Default package and why.
+
+=head1 BUGS
+
+Please log on RT and send to the geo-perl email list.
+
+=head1 SUPPORT
+
+Try geo-perl email list.
+
+=head1 AUTHOR
+
+    Michael R. Davis (mrdvt92)
+    CPAN ID: MRDVT
+
+=head1 COPYRIGHT
+
+This program is free software licensed under the...
+
+        The BSD License
+
+The full text of the license can be found in the
+LICENSE file included with this module.
+
+=head1 SEE ALSO
+
+L<Geo::GoogleEarth::Pluggable> creates a GoogleEarth Document.
+
+L<Geo::GoogleEarth::Pluggable::Base> is the base for Geo::GoogleEarth::Pluggable::* packages.
+
+L<Geo::GoogleEarth::Pluggable::Folder> is a Geo::GoogleEarth::Pluggable folder object.
+
+L<Geo::GoogleEarth::Pluggable::NetworkLink> is a Geo::GoogleEarth::Pluggable NetworkLink object.
+
+L<Geo::GoogleEarth::Pluggable::Placemark> is a Geo::GoogleEarth::Pluggable Placemark object.
+
+L<Geo::GoogleEarth::Pluggable::Style> is a Geo::GoogleEarth::Pluggable Style object.
+
+L<XML::Simple> is used by this package to generate XML from a data structure.
+
+=cut
 
 1;

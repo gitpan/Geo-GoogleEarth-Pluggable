@@ -3,4 +3,17 @@ Revision history for Perl module Geo::GoogleEarth::Pluggable
 0.01 2009-10-28
   - original version
 0.02 2009-10-29
-  - Updated Prereqs in Makefile.PL
+  - Updated prerequisites in Makefile.PL
+  - Removed Address method (does not appear to work anyway)
+  - Removed Address object
+  - Moved LinearRing method to Default plugin
+  - Moved LinearRing object to Contrib folder
+  - Added LinearRing example
+  - Added LineString method to Default plugin
+  - Added LineString object to Contirb folder
+  - Added LineString example
+  - Added default altitude for hash in point_stringify {alt=>0}
+  - Added all packages to test
+0.03
+  - Changed setting the "packages" property to using the pushPackages method which now allows testing with constructing the Folder object with Folder(packages=>[MyPackage])
+  - Removed use blib from Folder object.

@@ -3,14 +3,12 @@ use base qw{Geo::GoogleEarth::Pluggable::Base};
 use warnings;
 use strict;
 
-use blib;
 use Module::Pluggable search_path => "Geo::GoogleEarth::Pluggable::Plugin";
 use base qw{Method::Autoload};
 
-use Geo::GoogleEarth::Pluggable::Placemark;
 use Geo::GoogleEarth::Pluggable::NetworkLink;
 
-our $VERSION ='0.01';
+our $VERSION ='0.03';
 
 =head1 NAME
 
@@ -35,10 +33,18 @@ Geo::GoogleEarth::Pluggable::Folder is a L<Geo::GoogleEarth::Pluggable::Base> wi
 
 =cut
 
+=head2 initialize
+
+We overide the default "initialize" method in order to append the "plugins" method from L<Module::Pluggable> on to the packages list of the L<Method::Autoload> package.
+
+The "packages" property is what is needed by L<Method::Autoload> package.  The "plugins" method is what is provided by L<Module::Pluggable>.  So, the Folder package now has available to it every method in the "Plugins" folder at runtime.
+
+=cut
+
 sub initialize {
   my $self = shift();
   %$self=@_;
-  $self->{"packages"}=[$self->plugins];
+  $self->pushPackages($self->plugins); 
 }
 
 =head2 Folder
@@ -129,6 +135,8 @@ sub data {
 
 =head1 BUGS
 
+Please log on RT and send to the geo-perl email list.
+
 =head1 LIMITATIONS
 
 Due to a limitation in L<XML::Simple> and the fact that we feed it a hash, it is not possible to specify the order of Folders, Placemarks and NetworkLinks.  However, this package does preserve the order of creation within groups of Folders, Placemarks, and NetworkLinks.  A good work around is to put unique types of objects in folders.  
@@ -155,7 +163,7 @@ LICENSE file included with this module.
 
 =head1 SEE ALSO
 
-L<Geo::GoogleEarth::Pluggable> creates a GoogleEarth Document.
+L<Geo::GoogleEarth::Pluggable>, L<Module::Pluggable> L<Method::Autoload>
 
 =cut
 

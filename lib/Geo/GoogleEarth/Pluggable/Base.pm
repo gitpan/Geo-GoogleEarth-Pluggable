@@ -1,8 +1,8 @@
 package Geo::GoogleEarth::Pluggable::Base;
-use strict;
 use warnings;
+use strict;
 
-our $VERSION='0.02';
+our $VERSION='0.03';
 
 =head1 NAME
 
@@ -90,6 +90,8 @@ sub description {
 }
 
 =head1 BUGS
+
+Please log on RT and send to the geo-perl email list.
 
 =head1 SUPPORT
 

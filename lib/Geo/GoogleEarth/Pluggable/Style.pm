@@ -106,6 +106,8 @@ sub iconHref {
 
 =head1 BUGS
 
+Please log on RT and send to the geo-perl email list.
+
 =head1 SUPPORT
 
 Try geo-perl email list.
