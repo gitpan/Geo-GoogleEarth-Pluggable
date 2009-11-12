@@ -9,6 +9,7 @@ lib/Geo/GoogleEarth/Pluggable/NetworkLink.pm
 lib/Geo/GoogleEarth/Pluggable/Placemark.pm
 lib/Geo/GoogleEarth/Pluggable/Plugin/Default.pm
 lib/Geo/GoogleEarth/Pluggable/Style.pm
+lib/Geo/GoogleEarth/Pluggable/Plugin/Style.pm
 LICENSE
 Makefile.PL
 MANIFEST
@@ -18,6 +19,8 @@ scripts/Geo-GoogleEarth-Pluggable-Folders_with_Points.pl
 scripts/Geo-GoogleEarth-Pluggable-Point.pl
 scripts/Geo-GoogleEarth-Pluggable-LinearRing.pl
 scripts/Geo-GoogleEarth-Pluggable-LineString.pl
+scripts/Geo-GoogleEarth-Pluggable-NetworkLink.pl
+scripts/Geo-GoogleEarth-Pluggable-Point-StyleIcon.pl
 t/001_load.t
 Todo
 META.yml                                 Module meta-data (added by MakeMaker)

@@ -46,7 +46,7 @@ sub initialize {
   %$self=@_;
 }
 
-=head1 document
+=head2 document
 
 Always returns the document object
 

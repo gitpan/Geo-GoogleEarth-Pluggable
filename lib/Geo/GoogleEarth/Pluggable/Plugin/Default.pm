@@ -116,8 +116,6 @@ L<Geo::GoogleEarth::Pluggable::Placemark> is a Geo::GoogleEarth::Pluggable Place
 
 L<Geo::GoogleEarth::Pluggable::Style> is a Geo::GoogleEarth::Pluggable Style object.
 
-L<XML::Simple> is used by this package to generate XML from a data structure.
-
 =cut
 
 1;

@@ -1,9 +1,10 @@
 package Geo::GoogleEarth::Pluggable::Style;
 use base qw{Geo::GoogleEarth::Pluggable::Base};
+use XML::LibXML::LazyBuilder qw{E};
 use warnings;
 use strict;
 
-our $VERSION='0.02';
+our $VERSION='0.04';
 
 =head1 NAME
 
@@ -45,43 +46,41 @@ sub type {
   return "Style";
 }
 
-=head2 structure
-
-Returns a hash reference for feeding directly into L<XML::Simple>.
-
-  my $structure=$style->structure;
+=head2 node
 
 =cut
 
-sub structure {
-  my $self=shift();
-#{
-#          'Style' => {
-#                     'IconStyle' => {
-#                                    'Icon' => {
-#                                              'href' => 'http://maps.google.com/mapfiles/kml/paddle/L.png'
-#                                            }
-#                                  },
-#                     'id' => 'http://maps.google.com/mapfiles/kml/paddle/L.png'
-#                   }
-#        };
-  my $structure={id=>$self->id};
-  my %skip=map {$_=>1} (qw{id iconHref});
-  if (defined($self->iconHref)) {
-    $structure->{'IconStyle'} = [{Icon=> [{href=>[$self->iconHref]}]}];
+sub node {
+  my $self=shift;
+  my @element=();
+  foreach my $style (keys %$self) {
+    next if $style eq "document";
+    next if $style eq "id";
+    my @subelement=();
+    unless (ref($self->{$style}) eq "HASH") {
+      warn("Warning: Expecting $style to be a hash reference.");
+      next;
+    } else {
+      foreach my $key (keys %{$self->{$style}}) {
+        my $value=$self->{$style}->{$key};
+        #printf "Style: %s, Key: %s, Value: %s\n", $style, $key, $value;
+        #push @subelement, E(key=>{}, $key);
+        if ($key eq "color") {
+          push @subelement, E($key=>{}, $self->color($value));
+        } elsif ($key eq "href") {
+          push @subelement, E(Icon=>{}, E($key=>{}, $value));
+        } elsif (ref($value) eq "HASH") {
+          push @subelement, E($key=>$value);
+        } elsif (ref($value) eq "ARRAY") {
+          push @subelement, E($key=>{}, join(",", @$value));
+        } else {
+          push @subelement, E($key=>{}, $value);
+        }
+      }
+    }
+    push @element, E($style=>{}, @subelement);
   }
-  foreach my $key (keys %$self) {
-    next if exists $skip{$key};
-    $structure->{$key} = {content=>$self->function($key)};
-  }
-  my %options=$self->options;
-  foreach my $key (keys %options) {
-    my $hash=$structure->{$key}||{};
-    my @hash=%$hash;
-    push @hash, %{$self->options->{$key}};
-    $structure->{$key}={@hash};
-  }
-  return $structure;
+  return E(Style=>{id=>$self->id}, @element);
 }
 
 =head2 id
@@ -91,17 +90,55 @@ sub structure {
 sub id {
   my $self=shift();
   $self->{'id'}=shift if @_;
+  $self->{'id'}=$self->document->nextId("s") unless defined $self->{"id"};
   return $self->{'id'};
 }
 
-=head2 iconHref
+=head2 url
 
 =cut
 
-sub iconHref {
-  my $self=shift();
-  $self->{'iconHref'}=shift() if (@_);
-  return $self->{'iconHref'};
+sub url {
+  my $self=shift;
+  return sprintf("#%s", $self->id);
+}
+
+=head2 document
+
+=cut
+
+sub document {shift->{"document"}};
+
+=head2 color
+
+Returns a color code for use in the XML structure given many different inputs.
+
+  my $color=$style->color("FFFFFFFF"); #AABBGGRR in hex
+  my $color=$style->color({color="FFFFFFFF"});
+  my $color=$style->color({red=>255, green=>255, blue=>255, alpha=>255});
+  my $color=$style->color({rgb=>[255,255,255], alpha=>255});
+  my $color=$style->color({abgr=>[255,255,255,255]});
+ #my $color=$style->color({name=>"blue", alpha=>255});  #TODO with ColorNames
+
+=cut
+
+sub color {
+  my $self=shift;
+  my $color=shift;
+  if (ref($color) eq "HASH") {
+    if (defined($color->{"color"})) {
+      return $color->{"color"} || "FFFFFFFF";
+    } else {
+      my $a=$color->{"a"} || $color->{"alpha"} || $color->{"abgr"}->[0];
+      my $b=$color->{"b"} || $color->{"blue"}  || $color->{"abgr"}->[1] || 0;
+      my $g=$color->{"g"} || $color->{"green"} || $color->{"abgr"}->[2] || 0;
+      my $r=$color->{"r"} || $color->{"red"}   || $color->{"abgr"}->[3] || 0;
+      $a=255 unless defined $a;
+      return unpack("H8", pack("C4", $a,$b,$g,$r));
+    }
+  } else {
+    return $color || "FFFFFFFF";
+  }
 }
 
 =head1 BUGS

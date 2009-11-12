@@ -16,4 +16,9 @@ Revision history for Perl module Geo::GoogleEarth::Pluggable
   - Added all packages to test
 0.03
   - Changed setting the "packages" property to using the pushPackages method which now allows testing with constructing the Folder object with Folder(packages=>[MyPackage])
-  - Removed use blib from Folder object.
+  - Removed "use blib;" from Folder object.
+0.04 2009-11-10 - Happy Birthday Marines!
+  - Started work on Style objects and exceeded the capabilites of XML::Simple
+0.05 2009-11-11
+  - Use XML::LibXML to generate XML via XML::LibXML::LazyBuilder
+  - Implemented IconStyle 

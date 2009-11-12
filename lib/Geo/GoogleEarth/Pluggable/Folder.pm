@@ -1,5 +1,6 @@
 package Geo::GoogleEarth::Pluggable::Folder;
 use base qw{Geo::GoogleEarth::Pluggable::Base}; 
+use XML::LibXML::LazyBuilder qw{E};
 use warnings;
 use strict;
 
@@ -91,26 +92,18 @@ sub type {
   return "Folder";
 }
 
-=head2 structure
-
-Returns a hash reference for feeding directly into L<XML::Simple>.
-
-Unfortunately, this package cannot guarantee how Folders, Placemarks, or NetworkLinks are ordered when in the same folder.  Because, it's a hash reference!  But, order is preserved within a group of Folders, NetworkLink, and Placemarks.
-
-  my $structure=$folder->structure;
+=head2 node
 
 =cut
 
-sub structure {
-  my $self=shift();
-  my $structure={name=>[$self->name]}; #{Placemark=>[], Folder=>[], ...}
+sub node {
+  my $self=shift;
+  my @element=();
+  push @element, E(name=>{}, $self->name);
   foreach my $obj ($self->data) {
-    #$obj->type should be one of Placemark, Folder, NetworkLink
-    $structure->{$obj->type}=[] unless ref($structure->{$obj->type}) eq 'ARRAY';
-    #$obj->structure should be a HASH structure to feed into XML::Simple
-    push @{$structure->{$obj->type}}, $obj->structure;
+    push @element, $obj->node;
   }
-  return $structure;
+  return E(Folder=>{}, @element);
 }
 
 =head2 data
@@ -125,12 +118,21 @@ Pushes arguments onto data array and returns an array or reference that holds fo
 
 sub data {
   my $self=shift();
-  $self->{'data'} = [] unless ref($self->{'data'}) eq ref([]);
+  $self->{'data'} = [] unless ref($self->{'data'}) eq "ARRAY";
   my $data=$self->{'data'};
   if (@_) {
     push @$data, @_;
   }
   return wantarray ? @$data : $data;
+}
+
+=head2 document
+
+=cut
+
+sub document {
+  my $self=shift;
+  return $self->{"document"};
 }
 
 =head1 BUGS
@@ -139,7 +141,7 @@ Please log on RT and send to the geo-perl email list.
 
 =head1 LIMITATIONS
 
-Due to a limitation in L<XML::Simple> and the fact that we feed it a hash, it is not possible to specify the order of Folders, Placemarks and NetworkLinks.  However, this package does preserve the order of creation within groups of Folders, Placemarks, and NetworkLinks.  A good work around is to put unique types of objects in folders.  
+Due to limitations in Perl hashes, it is not possible to specify the order of certain elements and attributes in the XML.
 
 =head1 TODO
 
@@ -163,7 +165,7 @@ LICENSE file included with this module.
 
 =head1 SEE ALSO
 
-L<Geo::GoogleEarth::Pluggable>, L<Module::Pluggable> L<Method::Autoload>
+L<Geo::GoogleEarth::Pluggable>, L<Module::Pluggable> L<Method::Autoload>, L<XML::LibXML::LazyBuilder>
 
 =cut
 

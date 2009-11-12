@@ -1,5 +1,6 @@
 package Geo::GoogleEarth::Pluggable::NetworkLink;
 use base qw{Geo::GoogleEarth::Pluggable::Base};
+use XML::LibXML::LazyBuilder qw{E};
 use warnings;
 use strict;
 
@@ -37,21 +38,21 @@ sub type {
   return "NetworkLink";
 }
 
-=head2 structure
-
-Returns a hash reference for feeding directly into L<XML::Simple>.
-
-  my $structure=$networklink->structure;
+=head2 node
 
 =cut
 
-sub structure {
+sub node {
   my $self=shift;
-  my %data=%$self;
-  $data{"Link"}={href=>[$self->url]};
-  delete(@data{qw{url document}});
-  $data{$_}=[$data{$_}] foreach keys %data;
-  return \%data; 
+  my @element=();
+  foreach my $key (keys %$self) {
+    if ($key eq "url") { 
+      push @element, E(Link=>{}, E(href=>{}, $self->url));
+    } else {
+      push @element, E($key=>{}, $self->{$key}) unless ref($self->{$key});
+    }
+  }
+  return E(NetworkLink=>{}, @element);
 }
 
 =head2 url

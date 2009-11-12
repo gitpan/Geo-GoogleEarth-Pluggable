@@ -2,11 +2,11 @@ package Geo::GoogleEarth::Pluggable;
 use strict;
 use base qw{Geo::GoogleEarth::Pluggable::Folder}; 
 use Geo::GoogleEarth::Pluggable::Style;
-use XML::Simple qw{};
+use XML::LibXML::LazyBuilder qw{DOM E};
 use Archive::Zip qw{COMPRESSION_DEFLATED};
 use IO::Scalar qw{};
 
-our $VERSION='0.03';
+our $VERSION='0.05';
 
 =head1 NAME
 
@@ -37,6 +37,12 @@ This is all of the code you need to generate a complete Google Earth document.
   $document->Point(name=>"White House", lat=>38.897337, lon=>-77.036503);
   print $document->render;
 
+=head2 document
+
+=cut
+
+sub document {shift};
+
 =head2 render
 
 Returns an XML document with an XML declaration and a root name of "Document"
@@ -47,8 +53,20 @@ Returns an XML document with an XML declaration and a root name of "Document"
 
 sub render {
   my $self=shift();
-  my $xs=XML::Simple->new(XMLDecl=>1, RootName=>q{kml}, ForceArray=>1);
-  return $xs->XMLout({$self->xmlns, Document=>[$self->structure]});
+  my @style=();
+  my @stylemap=();
+  my @element=();
+  foreach my $obj ($self->data) {
+    if ($obj->can("type") and $obj->type eq "Style") {
+      push @style, $obj->node;
+    } elsif ($obj->can("type") and $obj->type eq "StyleMap") {
+      push @stylemap, $obj->node;
+    } else {
+      push @element, $obj->node;
+    }
+  }
+  my $d = DOM(E(kml=>{}, E(Document=>{}, @style, @stylemap, @element)));
+  return $d->toString;
 }
 
 =head2 archive
@@ -73,22 +91,6 @@ sub archive {
   return $archive;
 }
 
-=head2 Style
-
-Constructs a new Style object and appends it to the document object.  Returns the object reference.
-
-  my $style=$document->Style(id=>"myicon1",
-                 iconHref=>"http://maps.google.com/mapfiles/kml/paddle/L.png");
-
-=cut
-
-sub Style {
-  my $self=shift();
-  my $obj=Geo::GoogleEarth::Pluggable::Style->new(@_);
-  $self->data($obj);
-  return $obj;
-}
-
 =head2 xmlns
 
 =cut
@@ -106,6 +108,20 @@ sub xmlns {
   return wantarray ? %{$self->{'xmlns'}} : $self->{'xmlns'};
 }
 
+=head2 nextId
+
+  my $id=$document->nextId($type); #$type in {"s", "sm") Style or Style Map
+
+=cut
+
+sub nextId {
+  my $self=shift;
+  my $type=shift || "s";
+  $self->{"nextId"}=0 unless defined $self->{"nextId"};
+  return sprintf("%s-%s-%s", $type, "perl", $self->{"nextId"}++);
+}
+
+
 =head1 TODO
 
 =over
@@ -116,7 +132,7 @@ sub xmlns {
 
 =item Support for DateTime object in the constructor that is promoted to the LookAt object.
 
-=item Support for Point(coordinates=>[{},[],...]) (multiple name.$#coordinates)
+=item Support for MultiPoint(coordinates=>[{},[],...]) (multiple name.$#coordinates)
 
 =item Create a Great circle to LineString plugin
 
@@ -159,8 +175,6 @@ L<Geo::GoogleEarth::Pluggable::NetworkLink> is a Geo::GoogleEarth::Pluggable Net
 L<Geo::GoogleEarth::Pluggable::Placemark> is a Geo::GoogleEarth::Pluggable Placemark base object.
 
 L<Geo::GoogleEarth::Pluggable::Style> is a Geo::GoogleEarth::Pluggable Style object.
-
-L<XML::Simple> is used by this package to generate XML from a data structure.
 
 =cut
 

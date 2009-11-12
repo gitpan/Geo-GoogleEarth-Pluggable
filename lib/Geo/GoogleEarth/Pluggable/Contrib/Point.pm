@@ -1,5 +1,6 @@
 package Geo::GoogleEarth::Pluggable::Contrib::Point;
 use base qw{Geo::GoogleEarth::Pluggable::Placemark};
+use XML::LibXML::LazyBuilder qw{E};
 use warnings;
 use strict;
 
@@ -39,27 +40,14 @@ Geo::GoogleEarth::Pluggable::Contrib::Point is a L<Geo::GoogleEarth::Pluggable::
 
 =head1 METHODS
 
-=head2 subtype
+=head2 subnode
 
 =cut
 
-sub subtype {
-  return "Point";
-}
-
-=head2 substructure
-
-Returns a hash reference for feeding directly into L<XML::Simple>.
-
-  my $substructure=$placemark->substructure;
-
-=cut
-
-sub substructure {
+sub subnode {
   my $self=shift;
-  return {coordinates => [join(",", $self->lon,
-                                     $self->lat,
-                                     $self->alt || 0)]};
+  my $coordinates=join(",", $self->lon, $self->lat, $self->alt);
+  return E(Point=>{}, E(coordinates=>{}, $coordinates));
 }
 
 =head2 lat
@@ -103,6 +91,7 @@ Typically, Google Earth "snaps" Placemarks to the surface regardless of how the 
 sub alt {
   my $self=shift;
   $self->{'alt'}=shift if @_;
+  $self->{'alt'}||=0;
   return $self->{'alt'};
 }
 

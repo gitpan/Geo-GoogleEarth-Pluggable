@@ -1,5 +1,6 @@
 package Geo::GoogleEarth::Pluggable::Contrib::LineString;
 use base qw{Geo::GoogleEarth::Pluggable::Placemark};
+use XML::LibXML::LazyBuilder qw{E};
 use warnings;
 use strict;
 
@@ -33,30 +34,19 @@ Geo::GoogleEarth::Pluggable::Contrib::LineString is a L<Geo::GoogleEarth::Plugga
 
 =head1 METHODS
 
-=head2 subtype
+=head2 subnode
 
 =cut
 
-sub subtype {
-  return "LineString";
-}
-
-=head2 substructure
-
-Returns a hash reference for feeding directly into L<XML::Simple>.
-
-  my $substructure=$placemark->substructure;
-
-=cut
-
-sub substructure {
+sub subnode {
   my $self=shift;
   my %data=%$self;
-  $data{"tessellate"}=[1] unless defined $data{"tessellate"};
+  $data{"tessellate"}=1 unless defined $data{"tessellate"};
   my $coordinates=$self->coordinates_stringify($data{"coordinates"});
-  $data{"coordinates"}=[$coordinates];
-  delete(@data{qw{name}});
-  return \%data;
+  my @element=();
+  push @element, E(tessellate=>{}, $data{"tessellate"});
+  push @element, E(coordinates=>{}, $coordinates);
+  return E(LineString=>{}, @element);
 }
 
 =head1 BUGS

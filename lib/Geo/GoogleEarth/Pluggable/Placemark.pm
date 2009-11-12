@@ -1,5 +1,6 @@
 package Geo::GoogleEarth::Pluggable::Placemark;
 use base qw{Geo::GoogleEarth::Pluggable::Base};
+use XML::LibXML::LazyBuilder qw{E};
 use strict;
 use warnings;
 use Scalar::Util qw{reftype};
@@ -30,32 +31,33 @@ sub type {
   return "Placemark";
 }
 
-=head2 Style
+=head2 style
 
 Sets or returns the Placemark Style or StyleMap object.
 
-Style=>$style is a short cut for StyleUrl=>$style->url
+style=>$style is a short cut for styleUrl=>$style->url
 
 =cut
 
-sub Style {
+sub style {
   my $self=shift;
-  $self->{"Style"}=shift if @_;
-  return $self->{"Style"};
+  $self->{"style"}=shift if @_;
+  return $self->{"style"};
 }
 
-=head2 StyleUrl
+=head2 styleUrl
 
-This overrides Style->url if defined.
+This overrides style->url if defined.
 
 =cut
 
-sub StyleUrl {
+sub styleUrl {
   my $self=shift;
   my $url=undef;
-  $url=$self->Style->url if defined($self->Style) && $self->Style->can("url");
-  $self->{"StyleUrl"}=shift if @_;
-  return $self->{"StyleUrl"} || $url;
+  $url=$self->style->url if defined($self->style) && $self->style->can("url");
+  $self->{"styleUrl"}||=$url;
+  $self->{"styleUrl"}=shift if @_;
+  return $self->{"styleUrl"};
 }
 
 =head1 LookAt
@@ -84,21 +86,20 @@ sub visibility {
   return $self->{"visibility"};
 }
 
-=head1 structure
+=head2 node
 
 =cut
 
-sub structure {
+sub node {
   my $self=shift;
-  my $data={name=>[$self->name]};
-  $data->{$self->subtype}=[$self->substructure];   #from Plugin
-  $data->{"Placemark"}->{"visibility"}=[$self->visibility]
+  my @element=();
+  push @element, E(name=>{}, $self->name);
+  push @element, E(visibility=>{}, $self->visibility)
     if defined $self->visibility;
-  $data->{"Placemark"}->{"StyleUrl"}=[$self->StyleUrl]
-    if defined $self->StyleUrl;
-  return $data;
+  push @element, E(styleUrl=>{}, $self->styleUrl) if defined $self->styleUrl;
+  push @element, $self->subnode;
+  return E($self->type=>{}, @element);
 }
-
 =head2 coordinates
 
 The coordinates array is used consistantly for all placemark objects.
