@@ -1,9 +1,10 @@
 package Geo::GoogleEarth::Pluggable::Plugin::Style;
 use Geo::GoogleEarth::Pluggable::Style;
-use strict;
+use Scalar::Util qw{blessed};
 use warnings;
+use strict;
 
-our $VERSION='0.04';
+our $VERSION='0.06';
 
 =head1 NAME
 
@@ -30,9 +31,17 @@ Constructs a new Style object and appends it to the document object.  Returns th
 
 sub Style {
   my $self=shift;
+  my %data=@_;
+  foreach my $key (keys %data) {
+    next unless $key=~m/Style$/;
+    my $ref=$data{$key};
+    if (blessed($ref) and $ref->can("type") and $ref->type eq "Style") {
+      $data{$key}=$ref->{$key}; #allow Style to be blessed objects
+    }
+  }
   my $obj=Geo::GoogleEarth::Pluggable::Style->new(
                       document=>$self->document,
-                      @_,
+                      %data,
                     );
   $self->document->data($obj);
   return $obj;
@@ -53,6 +62,35 @@ sub IconStyle {
   my %data=@_;
   my $id=delete($data{"id"}); #undef is fine here...
   return $self->Style(id=>$id, IconStyle=>\%data);
+}
+
+=head2 LineStyle
+
+  my $color={red=>255, green=>255, blue=>255, alpha=>255};
+  my $style=$folder->LineStyle(color=>$color);
+
+=cut
+
+sub LineStyle {
+  my $self=shift;
+  my %data=@_;
+  $data{"width"}=1 unless defined $data{"width"};
+  my $id=delete($data{"id"}); #undef is fine here...
+  return $self->Style(id=>$id, LineStyle=>\%data);
+}
+
+=head2 PolyStyle
+
+  my $color={red=>255, green=>255, blue=>255, alpha=>255};
+  my $style=$folder->PolyStyle(color=>$color);
+
+=cut
+
+sub PolyStyle {
+  my $self=shift;
+  my %data=@_;
+  my $id=delete($data{"id"}); #undef is fine here...
+  return $self->Style(id=>$id, PolyStyle=>\%data);
 }
 
 =head1 TODO

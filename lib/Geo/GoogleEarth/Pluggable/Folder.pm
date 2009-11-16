@@ -9,7 +9,7 @@ use base qw{Method::Autoload};
 
 use Geo::GoogleEarth::Pluggable::NetworkLink;
 
-our $VERSION ='0.03';
+our $VERSION ='0.06';
 
 =head1 NAME
 
@@ -134,6 +134,12 @@ sub document {
   my $self=shift;
   return $self->{"document"};
 }
+
+=head2 open
+
+=cut
+
+sub open {shift->{"open"}};
 
 =head1 BUGS
 

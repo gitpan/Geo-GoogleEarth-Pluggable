@@ -1,10 +1,12 @@
 package Geo::GoogleEarth::Pluggable::Style;
 use base qw{Geo::GoogleEarth::Pluggable::Base};
+use Scalar::Util qw{reftype};
 use XML::LibXML::LazyBuilder qw{E};
 use warnings;
 use strict;
 
-our $VERSION='0.04';
+our $VERSION='0.06';
+our $PACKAGE=__PACKAGE__;
 
 =head1 NAME
 
@@ -57,10 +59,7 @@ sub node {
     next if $style eq "document";
     next if $style eq "id";
     my @subelement=();
-    unless (ref($self->{$style}) eq "HASH") {
-      warn("Warning: Expecting $style to be a hash reference.");
-      next;
-    } else {
+    if (reftype($self->{$style}) eq "HASH") {
       foreach my $key (keys %{$self->{$style}}) {
         my $value=$self->{$style}->{$key};
         #printf "Style: %s, Key: %s, Value: %s\n", $style, $key, $value;
@@ -77,6 +76,8 @@ sub node {
           push @subelement, E($key=>{}, $value);
         }
       }
+    } else {
+      warn("Warning: Expecting $style to be a hash reference.");
     }
     push @element, E($style=>{}, @subelement);
   }
@@ -120,6 +121,8 @@ Returns a color code for use in the XML structure given many different inputs.
   my $color=$style->color({abgr=>[255,255,255,255]});
  #my $color=$style->color({name=>"blue", alpha=>255});  #TODO with ColorNames
 
+Note: alpha can be 0-255 or "0%"-"100%"
+
 =cut
 
 sub color {
@@ -134,6 +137,9 @@ sub color {
       my $g=$color->{"g"} || $color->{"green"} || $color->{"abgr"}->[2] || 0;
       my $r=$color->{"r"} || $color->{"red"}   || $color->{"abgr"}->[3] || 0;
       $a=255 unless defined $a;
+      if ($a=~m/(\d+)%/) {
+        $a=$1/100*255;
+      }
       return unpack("H8", pack("C4", $a,$b,$g,$r));
     }
   } else {

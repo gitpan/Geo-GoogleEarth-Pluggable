@@ -6,7 +6,7 @@ use XML::LibXML::LazyBuilder qw{DOM E};
 use Archive::Zip qw{COMPRESSION_DEFLATED};
 use IO::Scalar qw{};
 
-our $VERSION='0.05';
+our $VERSION='0.06';
 
 =head1 NAME
 
@@ -56,6 +56,9 @@ sub render {
   my @style=();
   my @stylemap=();
   my @element=();
+  my @data=();
+  push @data, E(name=>{}, $self->name) if defined $self->name;
+  push @data, E(open=>{}, $self->open) if defined $self->open;
   foreach my $obj ($self->data) {
     if ($obj->can("type") and $obj->type eq "Style") {
       push @style, $obj->node;
@@ -65,7 +68,7 @@ sub render {
       push @element, $obj->node;
     }
   }
-  my $d = DOM(E(kml=>{}, E(Document=>{}, @style, @stylemap, @element)));
+  my $d = DOM(E(kml=>{}, E(Document=>{}, @data, @style, @stylemap, @element)));
   return $d->toString;
 }
 
