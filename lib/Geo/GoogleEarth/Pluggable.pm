@@ -6,7 +6,7 @@ use XML::LibXML::LazyBuilder qw{DOM E};
 use Archive::Zip qw{COMPRESSION_DEFLATED};
 use IO::Scalar qw{};
 
-our $VERSION='0.06';
+our $VERSION='0.07';
 
 =head1 NAME
 

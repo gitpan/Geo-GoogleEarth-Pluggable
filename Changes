@@ -22,3 +22,6 @@ Revision history for Perl module Geo::GoogleEarth::Pluggable
 0.05 2009-11-11
   - Use XML::LibXML to generate XML via XML::LibXML::LazyBuilder
   - Implemented IconStyle 
+0.06 2009-11-15
+  - Minor updates to support Geo::GoogleEarth::Pluggable::Plugin::Styles
+0.07 2009-11-16

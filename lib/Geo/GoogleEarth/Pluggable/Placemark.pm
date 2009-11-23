@@ -3,7 +3,7 @@ use base qw{Geo::GoogleEarth::Pluggable::Base};
 use XML::LibXML::LazyBuilder qw{E};
 use strict;
 use warnings;
-use Scalar::Util qw{reftype};
+use Scalar::Util qw{reftype blessed};
 
 our $VERSION='0.02';
 
@@ -54,7 +54,7 @@ This overrides style->url if defined.
 sub styleUrl {
   my $self=shift;
   my $url=undef;
-  $url=$self->style->url if defined($self->style) && $self->style->can("url");
+  $url=$self->style->url if blessed($self->style) && $self->style->can("url");
   $self->{"styleUrl"}||=$url;
   $self->{"styleUrl"}=shift if @_;
   return $self->{"styleUrl"};
