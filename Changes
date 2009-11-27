@@ -1,7 +1,22 @@
 Revision history for Perl module Geo::GoogleEarth::Pluggable
 
-0.01 2009-10-28
-  - original version
+0.09 2009-11-27
+  - Added StyleMap support
+  - Moved id and url methods from Style to StyleBase module
+0.08 2009-11-26
+  - Modified document->render method to be a wrapper around folder->node
+0.07 2009-11-16
+  - Cleaned up Document->render and Folder->node methods
+0.06 2009-11-15
+  - Minor updates to support Geo::GoogleEarth::Pluggable::Plugin::Styles
+0.05 2009-11-11
+  - Use XML::LibXML to generate XML via XML::LibXML::LazyBuilder
+  - Implemented IconStyle 
+0.04 2009-11-10 - Happy Birthday Marines!
+  - Started work on Style objects and exceeded the capabilites of XML::Simple
+0.03
+  - Changed setting the "packages" property to using the pushPackages method which now allows testing with constructing the Folder object with Folder(packages=>[MyPackage])
+  - Removed "use blib;" from Folder object.
 0.02 2009-10-29
   - Updated prerequisites in Makefile.PL
   - Removed Address method (does not appear to work anyway)
@@ -14,14 +29,5 @@ Revision history for Perl module Geo::GoogleEarth::Pluggable
   - Added LineString example
   - Added default altitude for hash in point_stringify {alt=>0}
   - Added all packages to test
-0.03
-  - Changed setting the "packages" property to using the pushPackages method which now allows testing with constructing the Folder object with Folder(packages=>[MyPackage])
-  - Removed "use blib;" from Folder object.
-0.04 2009-11-10 - Happy Birthday Marines!
-  - Started work on Style objects and exceeded the capabilites of XML::Simple
-0.05 2009-11-11
-  - Use XML::LibXML to generate XML via XML::LibXML::LazyBuilder
-  - Implemented IconStyle 
-0.06 2009-11-15
-  - Minor updates to support Geo::GoogleEarth::Pluggable::Plugin::Styles
-0.07 2009-11-16
+0.01 2009-10-28
+  - original version

@@ -4,7 +4,7 @@ use XML::LibXML::LazyBuilder qw{E};
 use warnings;
 use strict;
 
-our $VERSION='0.03';
+our $VERSION='0.09';
 
 =head1 NAME
 
@@ -33,10 +33,7 @@ Returns the object type.
 
 =cut
 
-sub type {
-  my $self=shift();
-  return "NetworkLink";
-}
+sub type {"NetworkLink"};
 
 =head2 node
 

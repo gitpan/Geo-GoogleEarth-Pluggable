@@ -1,6 +1,7 @@
 package Geo::GoogleEarth::Pluggable::Folder;
 use base qw{Geo::GoogleEarth::Pluggable::Base}; 
 use XML::LibXML::LazyBuilder qw{E};
+use Scalar::Util qw{blessed};
 use warnings;
 use strict;
 
@@ -9,7 +10,7 @@ use base qw{Method::Autoload};
 
 use Geo::GoogleEarth::Pluggable::NetworkLink;
 
-our $VERSION ='0.06';
+our $VERSION ='0.09';
 
 =head1 NAME
 
@@ -58,7 +59,7 @@ Constructs a new Folder object and appends it to the parent folder object.  Retu
 =cut
 
 sub Folder {
-  my $self=shift();
+  my $self=shift;
   my $obj=Geo::GoogleEarth::Pluggable::Folder->new(document=>$self->document, @_);
   $self->data($obj);
   return $obj;
@@ -87,10 +88,7 @@ Returns the object type.
 
 =cut
 
-sub type {
-  my $self=shift();
-  return "Folder";
-}
+sub type {"Folder"};
 
 =head2 node
 
@@ -98,12 +96,22 @@ sub type {
 
 sub node {
   my $self=shift;
+  my @data=();
+  push @data, E(name=>{}, $self->name) if defined $self->name;
+  push @data, E(open=>{}, $self->open) if defined $self->open;
+  my @style=();
+  my @stylemap=();
   my @element=();
-  push @element, E(name=>{}, $self->name);
   foreach my $obj ($self->data) {
-    push @element, $obj->node;
+    if (blessed($obj) and $obj->can("type") and $obj->type eq "Style") {
+      push @style, $obj->node;
+    } elsif (blessed($obj) and $obj->can("type") and $obj->type eq "StyleMap") {
+      push @stylemap, $obj->node;
+    } else {
+      push @element, $obj->node;
+    }
   }
-  return E(Folder=>{}, @element);
+  return E($self->type=>{}, @data, @style, @stylemap, @element);
 }
 
 =head2 data
@@ -124,15 +132,6 @@ sub data {
     push @$data, @_;
   }
   return wantarray ? @$data : $data;
-}
-
-=head2 document
-
-=cut
-
-sub document {
-  my $self=shift;
-  return $self->{"document"};
 }
 
 =head2 open
@@ -157,14 +156,14 @@ Try geo-perl email list.
 
 =head1 AUTHOR
 
-    Michael R. Davis (mrdvt92)
-    CPAN ID: MRDVT
+  Michael R. Davis (mrdvt92)
+  CPAN ID: MRDVT
 
 =head1 COPYRIGHT
 
 This program is free software licensed under the...
 
-	The BSD License
+  The BSD License
 
 The full text of the license can be found in the
 LICENSE file included with this module.

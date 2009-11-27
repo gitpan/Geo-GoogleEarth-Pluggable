@@ -1,14 +1,23 @@
 package Geo::GoogleEarth::Pluggable::Plugin::Style;
 use Geo::GoogleEarth::Pluggable::Style;
+use Geo::GoogleEarth::Pluggable::StyleMap;
 use Scalar::Util qw{blessed};
 use warnings;
 use strict;
 
-our $VERSION='0.06';
+our $VERSION='0.09';
 
 =head1 NAME
 
 Geo::GoogleEarth::Pluggable::Plugin::Style - Geo::GoogleEarth::Pluggable Style Plugin Methods
+
+=head1 SYNOPSIS
+
+  use Geo::GoogleEarth::Pluggable;
+  my $document=Geo::GoogleEarth::Pluggable->new;     #ISA L<Geo::GoogleEarth::Pluggable>
+  my $style=$document->StyleIcon(color=>{red=>255}); #ISA L<Geo::GoogleEarth::Pluggable::Style>
+  my $point=$document->Point(style=>$style);         #ISA L<Geo::GoogleEarth::Pluggable::Contrib::Point>
+  print $document->render;
 
 =head1 METHODS
 
@@ -27,6 +36,12 @@ Constructs a new Style object and appends it to the document object.  Returns th
                            ListStyle  => {},
                           );
 
+  my $style=$folder->Style(
+                           IconStyle  => $style1, #extracts IconStyle from $style1
+                           LineStyle  => $style2, #extracts LineStyle from $style2
+                           PolyStyle  => $style3, #extracts PolyStyle from $style3
+                          );
+
 =cut
 
 sub Style {
@@ -34,12 +49,35 @@ sub Style {
   my %data=@_;
   foreach my $key (keys %data) {
     next unless $key=~m/Style$/;
+    #Extracts the particular IconStyle, LineStyle, etc from an existing Style object
     my $ref=$data{$key};
     if (blessed($ref) and $ref->can("type") and $ref->type eq "Style") {
       $data{$key}=$ref->{$key}; #allow Style to be blessed objects
     }
   }
   my $obj=Geo::GoogleEarth::Pluggable::Style->new(
+                      document=>$self->document,
+                      %data,
+                    );
+  $self->document->data($obj);
+  return $obj;
+}
+
+=head2 StyleMap
+
+Constructs a new StyleMap object and appends it to the document object.  Returns the StyleMap object reference.
+
+  my $stylemap=$document->StyleMap(
+                            normal    => $style1,
+                            highlight => $style2,
+                          );
+
+=cut
+
+sub StyleMap {
+  my $self=shift;
+  my %data=@_;
+  my $obj=Geo::GoogleEarth::Pluggable::StyleMap->new(
                       document=>$self->document,
                       %data,
                     );
@@ -93,6 +131,37 @@ sub PolyStyle {
   return $self->Style(id=>$id, PolyStyle=>\%data);
 }
 
+=head2 LabelStyle
+
+  my $style=$folder->IconStyle(
+                               color => $color,
+                               scale => $scale,
+                              );
+
+=cut
+
+sub LabelStyle {
+  my $self=shift;
+  my %data=@_;
+  my $id=delete($data{"id"}); #undef is fine here...
+  return $self->Style(id=>$id, LabelStyle=>\%data);
+}
+
+=head2 ListStyle
+
+  my $style=$folder->IconStyle(
+                               href  => $url,
+                              );
+
+=cut
+
+sub ListStyle {
+  my $self=shift;
+  my %data=@_;
+  my $id=delete($data{"id"}); #undef is fine here...
+  return $self->Style(id=>$id, ListStyle=>\%data);
+}
+
 =head1 TODO
 
 Need to determine what methods should be in the Folder package and what should be on the Plugin/Style package and why.
@@ -100,6 +169,21 @@ Need to determine what methods should be in the Folder package and what should b
 =head1 BUGS
 
 Please log on RT and send to the geo-perl email list.
+
+=head1 LIMITATIONS
+
+This will construct 100 identical style objects
+
+  foreach (1 .. 100) {
+    $document->Point(style=>$document->StyleIcon(color=>{red=>255}));
+  } 
+
+Do this instead
+
+  my $style=$document->StyleIcon(color=>{red=>255});
+  foreach (1 .. 100) {
+    $document->Point(style=>$style);
+  }
 
 =head1 SUPPORT
 

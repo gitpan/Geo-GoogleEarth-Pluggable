@@ -4,7 +4,7 @@ use XML::LibXML::LazyBuilder qw{E};
 use warnings;
 use strict;
 
-our $VERSION='0.03';
+our $VERSION='0.09';
 
 =head1 NAME
 
@@ -61,21 +61,21 @@ Try geo-perl email list.
 
 =head1 AUTHOR
 
-    Michael R. Davis (mrdvt92)
-    CPAN ID: MRDVT
+  Michael R. Davis (mrdvt92)
+  CPAN ID: MRDVT
 
 =head1 COPYRIGHT
 
 This program is free software licensed under the...
 
-	The BSD License
+  The BSD License
 
 The full text of the license can be found in the
 LICENSE file included with this module.
 
 =head1 SEE ALSO
 
-L<Geo::GoogleEarth::Pluggable> creates a GoogleEarth Document.
+L<Geo::GoogleEarth::Pluggable>, L<XML::LibXML::LazyBuilder>, L<Geo::GoogleEarth::Pluggable::Placemark>
 
 =cut
 

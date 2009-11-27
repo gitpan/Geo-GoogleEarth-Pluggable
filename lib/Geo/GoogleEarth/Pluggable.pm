@@ -1,12 +1,11 @@
 package Geo::GoogleEarth::Pluggable;
 use strict;
 use base qw{Geo::GoogleEarth::Pluggable::Folder}; 
-use Geo::GoogleEarth::Pluggable::Style;
 use XML::LibXML::LazyBuilder qw{DOM E};
 use Archive::Zip qw{COMPRESSION_DEFLATED};
 use IO::Scalar qw{};
 
-our $VERSION='0.07';
+our $VERSION='0.09';
 
 =head1 NAME
 
@@ -15,18 +14,47 @@ Geo::GoogleEarth::Pluggable - Generates GoogleEarth Documents
 =head1 SYNOPSIS
 
   use Geo::GoogleEarth::Pluggable;
-  my $document    = Geo::GoogleEarth::Pluggable->new(); #is a special Folder...
-  my $folder      = $document->Folder();                #Geo::GoogleEarth::Pluggable::Folder object
-  my $placemark   = $document->Point();             #Geo::GoogleEarth::Pluggable::Point object
-  my $networklink = $document->NetworkLink();           #Geo::GoogleEarth::Pluggable::NetworkLink object
-  my $style = $document->Style();                       #Geo::GoogleEarth::Pluggable::Style object
-  print $document->render();
+  my $document=Geo::GoogleEarth::Pluggable->new(%data); #is a special Folder...
+  my $folder  =$document->Folder(%data);                #L<Geo::GoogleEarth::Pluggable::Folder>
+  my $point   =$document->Point(%data);                 #L<Geo::GoogleEarth::Pluggable::Point>
+  my $netlink =$document->NetworkLink(%data);           #L<Geo::GoogleEarth::Pluggable::NetworkLink>
+  my $style   =$document->Style(%data);                 #L<Geo::GoogleEarth::Pluggable::Style>
+  print $document->render;
+
+KML CGI Example
+
+  use Geo::GoogleEarth::Pluggable;
+  my $document=Geo::GoogleEarth::Pluggable->new(name=>"KML Document");
+  print $document->header,
+        $document->render;
+
+KMZ CGI Example
+
+  use Geo::GoogleEarth::Pluggable;
+  my $document=Geo::GoogleEarth::Pluggable->new(name=>"KMZ Document");
+  print $document->header_kmz,
+        $document->archive;
 
 =head1 DESCRIPTION
 
 Geo::GoogleEarth::Pluggable is a Perl object oriented interface that allows for the creation of XML documents that can be used with Google Earth.
 
 Geo::GoogleEarth::Pluggable is a L<Geo::GoogleEarth::Pluggable::Folder> with a render method.
+
+=head2 Object Inheritance Graph
+
+  -- Base --- Folder    --- Document
+           ¦
+           +- Placemark --- Point
+           ¦             +- LineString
+           ¦             +- LinearRing
+           ¦
+           +- StyleBase --- Style
+           ¦             +- StyleMap
+           ¦
+           +- NetworkLink
+
+Note: Folder is also a L<Method::Autoload> object and Document is a L<Geo::GoogleEarth::Pluggable> object
 
 =head1 USAGE
 
@@ -37,7 +65,29 @@ This is all of the code you need to generate a complete Google Earth document.
   $document->Point(name=>"White House", lat=>38.897337, lon=>-77.036503);
   print $document->render;
 
+=head1 CONSTRUCTOR
+
+=head2 new
+
+  my $document=Geo::GoogleEarth::Pluggable->new(name=>"My Name");
+
+=head1 METHODS
+
+=head2 type
+
+Returns the object type.
+
+  my $type=$folder->type;
+
+=cut
+
+sub type {"Document"};
+
 =head2 document
+
+Returns the document object.
+
+All objects know to which document they belong even the document itself!
 
 =cut
 
@@ -52,23 +102,8 @@ Returns an XML document with an XML declaration and a root name of "Document"
 =cut
 
 sub render {
-  my $self=shift();
-  my @style=();
-  my @stylemap=();
-  my @element=();
-  my @data=();
-  push @data, E(name=>{}, $self->name) if defined $self->name;
-  push @data, E(open=>{}, $self->open) if defined $self->open;
-  foreach my $obj ($self->data) {
-    if ($obj->can("type") and $obj->type eq "Style") {
-      push @style, $obj->node;
-    } elsif ($obj->can("type") and $obj->type eq "StyleMap") {
-      push @stylemap, $obj->node;
-    } else {
-      push @element, $obj->node;
-    }
-  }
-  my $d = DOM(E(kml=>{}, E(Document=>{}, @data, @style, @stylemap, @element)));
+  my $self=shift;
+  my $d = DOM(E(kml=>{$self->xmlns}, $self->node));
   return $d->toString;
 }
 
@@ -96,6 +131,22 @@ sub archive {
 
 =head2 xmlns
 
+Add or update a namespace
+
+  $document->xmlns->{"namespace"}=$url;
+
+Delete a namespace
+
+  delete($document->xmlns->{"xmlns:gx"});
+
+Replace all namespaces
+
+  $document->{"xmlns"}={namespace=>$url};
+
+Reset to default namespaces
+
+  delete($document->{"xmlns"});
+
 =cut
 
 sub xmlns {
@@ -113,31 +164,75 @@ sub xmlns {
 
 =head2 nextId
 
-  my $id=$document->nextId($type); #$type in {"s", "sm") Style or Style Map
+This method is in the document since all Styles and StyleMaps are in the document not folders.
+
+  my $id=$document->nextId($type); #$type in "Style" or "StyleMap"
 
 =cut
 
 sub nextId {
   my $self=shift;
-  my $type=shift || "s";
+  my $type=shift || "Unknown";
   $self->{"nextId"}=0 unless defined $self->{"nextId"};
   return sprintf("%s-%s-%s", $type, "perl", $self->{"nextId"}++);
 }
 
+=head2 header, header_kml
+
+Returns a header appropriate for a web application
+
+  Content-type: application/vnd.google-earth.kml+xml
+  Content-Disposition: attachment; filename=filename.xls
+
+  $document->header                                                       #embedded in browser
+  $document->header(filename=>"filename.xls")                             #download prompt
+  $document->header(content_type=>"application/vnd.google-earth.kml+xml") #default content type
+
+=cut
+
+*header_kml=\&header;
+
+sub header {
+  my $self=shift;
+  my %data=@_;
+     $data{"content_type"}="application/vnd.google-earth.kml+xml"
+       unless defined $data{"content_type"};
+  my $header=sprintf("Content-type: %s\n", $data{"content_type"});
+     $header.=sprintf("Content-Disposition: attachment; filename=%s\n",
+                         $data{"filename"}) if defined $data{"filename"};
+     $header.="\n";
+  return $header;
+}
+
+=head2 header_kmz
+
+Returns a header appropriate for a web application
+
+  Content-type: application/vnd.google-earth.kml+xml
+  Content-Disposition: attachment; filename=filename.xls
+
+  $document->header_kmz                                                   #embedded in browser
+  $document->header_kmz(filename=>"filename.xls")                         #download prompt
+  $document->header_kmz(content_type=>"application/vnd.google-earth.kmz") #default content type
+
+=cut
+
+sub header_kmz {
+  my $self=shift;
+  my %data=@_;
+  $data{"content_type"}||="application/vnd.google-earth.kmz";
+  return $self->header(%data);
+}
 
 =head1 TODO
 
 =over
 
-=item Full support for LookAt and Style, and StyleMap
+=item Full support for LookAt
 
 =item Support for default Polygon and Line styles that are nicer than GoogleEarth's
 
 =item Support for DateTime object in the constructor that is promoted to the LookAt object.
-
-=item Support for MultiPoint(coordinates=>[{},[],...]) (multiple name.$#coordinates)
-
-=item Create a Great circle to LineString plugin
 
 =item Create a GPSPoint plugin (Promote tag as name and datetime to LookAt)
 
@@ -147,37 +242,35 @@ sub nextId {
 
 Please log on RT and send to the geo-perl email list.
 
+=head1 LIMITS
+
+The XML produced by L<XML::LibXML> is not "pretty".  If you need pretty XML you must pass the output through xmllint or a simular product.
+
+For example: 
+
+  perl -MGeo::GoogleEarth::Pluggable -e "print Geo::GoogleEarth::Pluggable->new->render" | xmllint --format -
+
 =head1 SUPPORT
 
 Try geo-perl email list.
 
 =head1 AUTHOR
 
-    Michael R. Davis (mrdvt92)
-    CPAN ID: MRDVT
+  Michael R. Davis (mrdvt92)
+  CPAN ID: MRDVT
 
 =head1 COPYRIGHT
 
 This program is free software licensed under the...
 
-	The BSD License
+  The BSD License
 
 The full text of the license can be found in the
 LICENSE file included with this module.
 
 =head1 SEE ALSO
 
-L<Geo::GoogleEarth::Pluggable> creates a GoogleEarth Document.
-
-L<Geo::GoogleEarth::Pluggable::Base> is the base for Geo::GoogleEarth::Pluggable::* packages.
-
-L<Geo::GoogleEarth::Pluggable::Folder> is a Geo::GoogleEarth::Pluggable folder object.
-
-L<Geo::GoogleEarth::Pluggable::NetworkLink> is a Geo::GoogleEarth::Pluggable NetworkLink object.
-
-L<Geo::GoogleEarth::Pluggable::Placemark> is a Geo::GoogleEarth::Pluggable Placemark base object.
-
-L<Geo::GoogleEarth::Pluggable::Style> is a Geo::GoogleEarth::Pluggable Style object.
+L<XML::LibXML::LazyBuilder>, L<Archive::Zip>, L<IO::Scalar>
 
 =cut
 

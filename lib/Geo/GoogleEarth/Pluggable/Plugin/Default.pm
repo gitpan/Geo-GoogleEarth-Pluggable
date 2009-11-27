@@ -5,7 +5,7 @@ use Geo::GoogleEarth::Pluggable::Contrib::Point;
 use Geo::GoogleEarth::Pluggable::Contrib::LineString;
 use Geo::GoogleEarth::Pluggable::Contrib::LinearRing;
 
-our $VERSION='0.02';
+our $VERSION='0.09';
 
 =head1 NAME
 
@@ -20,7 +20,7 @@ Methods in this package are AUTOLOADed into the  Geo::GoogleEarth::Pluggable::Fo
 Plugin Naming Convention: Geo::GoogleEarth::Pluggable::Plugin::CPANID (e.g. "MRDVT")
 Object Naming Convention: Geo::GoogleEarth::Pluggable::Contrib::"$method" (e.g. Point, CircleByCenterPoint)
 
-You should only have one plugin pointing to all of your contributed objects.
+You only need to have one plugin pointing to all of your contributed objects.
 
 The package should be named after the plugin not the objects since there is a many to one relationship.  (e.g. Geo-GoogleEarth-Pluggable-Plugin-MRDVT)
 
@@ -37,7 +37,7 @@ Constructs a new Placemark Point object and appends it to the parent folder obje
 
 sub Point {
   my $self=shift; #This will be a Geo::GoogleEarth::Pluggable::Folder object
-  my $obj=Geo::GoogleEarth::Pluggable::Contrib::Point->new(@_);
+  my $obj=Geo::GoogleEarth::Pluggable::Contrib::Point->new(document=>$self->document, @_);
   $self->data($obj);
   return $obj;
 }
@@ -54,7 +54,7 @@ sub Point {
 
 sub LineString {
   my $self=shift;
-  my $obj=Geo::GoogleEarth::Pluggable::Contrib::LineString->new(@_);
+  my $obj=Geo::GoogleEarth::Pluggable::Contrib::LineString->new(document=>$self->document, @_);
   $self->data($obj);
   return $obj;
 }
@@ -64,14 +64,14 @@ sub LineString {
   $folder->LinearRing(name=>"My Placemark",
                       coordinates=>[
                                      [lat,lon,alt],
-                                     [lat,lon,alt],
+                                     {lat=>$lat,lon=>$lon,alt=>$alt},
                                    ]);
 
 =cut
 
 sub LinearRing {
   my $self=shift;
-  my $obj=Geo::GoogleEarth::Pluggable::Contrib::LinearRing->new(@_);
+  my $obj=Geo::GoogleEarth::Pluggable::Contrib::LinearRing->new(document=>$self->document, @_);
   $self->data($obj);
   return $obj;
 }
@@ -90,31 +90,21 @@ Try geo-perl email list.
 
 =head1 AUTHOR
 
-    Michael R. Davis (mrdvt92)
-    CPAN ID: MRDVT
+  Michael R. Davis (mrdvt92)
+  CPAN ID: MRDVT
 
 =head1 COPYRIGHT
 
 This program is free software licensed under the...
 
-        The BSD License
+  The BSD License
 
 The full text of the license can be found in the
 LICENSE file included with this module.
 
 =head1 SEE ALSO
 
-L<Geo::GoogleEarth::Pluggable> creates a GoogleEarth Document.
-
-L<Geo::GoogleEarth::Pluggable::Base> is the base for Geo::GoogleEarth::Pluggable::* packages.
-
-L<Geo::GoogleEarth::Pluggable::Folder> is a Geo::GoogleEarth::Pluggable folder object.
-
-L<Geo::GoogleEarth::Pluggable::NetworkLink> is a Geo::GoogleEarth::Pluggable NetworkLink object.
-
-L<Geo::GoogleEarth::Pluggable::Placemark> is a Geo::GoogleEarth::Pluggable Placemark object.
-
-L<Geo::GoogleEarth::Pluggable::Style> is a Geo::GoogleEarth::Pluggable Style object.
+L<Geo::GoogleEarth::Pluggable::Contrib::Point>, L<Geo::GoogleEarth::Pluggable::Contrib::LineString>, L<Geo::GoogleEarth::Pluggable::Contrib::LinearRing>
 
 =cut
 

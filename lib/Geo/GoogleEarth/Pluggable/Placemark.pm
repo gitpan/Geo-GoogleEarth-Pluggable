@@ -1,15 +1,15 @@
 package Geo::GoogleEarth::Pluggable::Placemark;
 use base qw{Geo::GoogleEarth::Pluggable::Base};
-use XML::LibXML::LazyBuilder qw{E};
 use strict;
 use warnings;
 use Scalar::Util qw{reftype blessed};
+use XML::LibXML::LazyBuilder qw{E};
 
-our $VERSION='0.02';
+our $VERSION='0.09';
 
 =head1 NAME
 
-Geo::GoogleEarth::Pluggable::Placemark - Base for Geo::GoogleEarth::Pluggable Placemarks
+Geo::GoogleEarth::Pluggable::Placemark - Base Object for Geo::GoogleEarth::Pluggable Placemarks
 
 =head1 SYNOPSIS
 
@@ -27,9 +27,7 @@ The is the base of all Geo::GoogleEarth::Pluggable packages.
 
 =cut
 
-sub type {
-  return "Placemark";
-}
+sub type {"Placemark"};
 
 =head2 style
 
@@ -60,7 +58,7 @@ sub styleUrl {
   return $self->{"styleUrl"};
 }
 
-=head1 LookAt
+=head2 LookAt
 
 Sets or returns the LookAt Object
 
@@ -93,13 +91,14 @@ sub visibility {
 sub node {
   my $self=shift;
   my @element=();
-  push @element, E(name=>{}, $self->name);
+  push @element, E(name=>{}, $self->name) if defined $self->name;
   push @element, E(visibility=>{}, $self->visibility)
     if defined $self->visibility;
   push @element, E(styleUrl=>{}, $self->styleUrl) if defined $self->styleUrl;
   push @element, $self->subnode;
   return E($self->type=>{}, @element);
 }
+
 =head2 coordinates
 
 The coordinates array is used consistantly for all placemark objects.
@@ -145,11 +144,25 @@ sub coordinates_stringify {
 
 =head2 point_stringify
 
-Most of this code was taken from GPS::Point->initializeMulti
+  my $string=$placemark->point_stringify($point); #returns "$lon,$lat,$alt"
 
 =cut
 
 sub point_stringify {
+  my $self=shift;
+  my %data=$self->point_normalize(@_);
+  return join(",", @data{qw{lon lat alt}});
+}
+
+=head2 point_normalize
+
+Most of this code was taken from GPS::Point->initializeMulti
+
+  my $data=$placemark->point_normalize($point); #returns {lat=>$lat,lon=>$lon,alt=>$alt}
+
+=cut
+
+sub point_normalize {
   my $self=shift;
   my $point=shift;
   my $data={};
@@ -161,11 +174,11 @@ sub point_stringify {
   } elsif (ref($point) eq "GPS::Point") {
     $data->{'lat'}=$point->lat;
     $data->{'lon'}=$point->lon;
-    $data->{'alt'}=$point->alt;
+    $data->{'alt'}=$point->alt||0;
   } elsif (ref($point) eq "Net::GPSD::Point") {
     $data->{'lat'}=$point->latitude;
     $data->{'lon'}=$point->longitude;
-    $data->{'alt'}=$point->altitude;
+    $data->{'alt'}=$point->altitude||0;
   } elsif (reftype($point) eq "HASH") {
     #{lat=>$lat, lon=>$lon, alt=>$alt}
     $data->{'lat'}=$point->{'lat'}||$point->{'latitude'};
@@ -178,7 +191,7 @@ sub point_stringify {
     $data->{'lat'}=$point->[1];
     $data->{'alt'}=$point->[2]||0;
   }
-  return join(",", @{$data}{qw{lon lat alt}});
+  return wantarray ? %$data : $data;
 }
 
 =head1 BUGS
@@ -191,21 +204,21 @@ Try geo-perl email list.
 
 =head1 AUTHOR
 
-    Michael R. Davis (mrdvt92)
-    CPAN ID: MRDVT
+  Michael R. Davis (mrdvt92)
+  CPAN ID: MRDVT
 
 =head1 COPYRIGHT
 
 This program is free software licensed under the...
 
-	The BSD License
+  The BSD License
 
 The full text of the license can be found in the
 LICENSE file included with this module.
 
 =head1 SEE ALSO
 
-L<Geo::GoogleEarth::Pluggable> creates a GoogleEarth Document.
+L<Geo::GoogleEarth::Pluggable>, L<Scalar::Util>, L<XML::LibXML::LazyBuilder>
 
 =cut
 

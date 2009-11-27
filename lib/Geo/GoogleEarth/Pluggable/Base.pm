@@ -2,7 +2,7 @@ package Geo::GoogleEarth::Pluggable::Base;
 use warnings;
 use strict;
 
-our $VERSION='0.03';
+our $VERSION='0.09';
 
 =head1 NAME
 
@@ -48,14 +48,11 @@ sub initialize {
 
 =head2 document
 
-Always returns the document object
+Always returns the document object.  Every object should know what document it is in.
 
 =cut
 
-sub document {
-  my $self=shift;
-  return $self->{"document"};
-}
+sub document {shift->{"document"}};
 
 =head2 name
 

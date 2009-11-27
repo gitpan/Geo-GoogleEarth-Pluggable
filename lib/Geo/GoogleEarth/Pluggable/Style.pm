@@ -1,11 +1,11 @@
 package Geo::GoogleEarth::Pluggable::Style;
-use base qw{Geo::GoogleEarth::Pluggable::Base};
+use base qw{Geo::GoogleEarth::Pluggable::StyleBase};
 use Scalar::Util qw{reftype};
 use XML::LibXML::LazyBuilder qw{E};
 use warnings;
 use strict;
 
-our $VERSION='0.06';
+our $VERSION='0.09';
 our $PACKAGE=__PACKAGE__;
 
 =head1 NAME
@@ -16,7 +16,7 @@ Geo::GoogleEarth::Pluggable::Style - Geo::GoogleEarth::Pluggable Style Object
 
   use Geo::GoogleEarth::Pluggable;
   my $document=Geo::GoogleEarth::Pluggable->new();
-  $document->Style();
+  my $style=$document->Style();
 
 =head1 DESCRIPTION
 
@@ -44,9 +44,7 @@ Returns the object type.
 
 =cut
 
-sub type {
-  return "Style";
-}
+sub type {"Style"};
 
 =head2 node
 
@@ -67,8 +65,12 @@ sub node {
         if ($key eq "color") {
           push @subelement, E($key=>{}, $self->color($value));
         } elsif ($key eq "href") {
-          push @subelement, E(Icon=>{}, E($key=>{}, $value));
-        } elsif (ref($value) eq "HASH") {
+          if ($style eq "ListStyle") { #Google Earth Inconsistency!
+            push @subelement, E(ItemIcon=>{}, E($key=>{}, $value));
+          } else {
+            push @subelement, E(Icon=>{}, E($key=>{}, $value)); #which way to default
+          }
+        } elsif (ref($value) eq "HASH") { #e.g. hotSpot
           push @subelement, E($key=>$value);
         } elsif (ref($value) eq "ARRAY") {
           push @subelement, E($key=>{}, join(",", @$value));
@@ -83,32 +85,6 @@ sub node {
   }
   return E(Style=>{id=>$self->id}, @element);
 }
-
-=head2 id
-
-=cut
-
-sub id {
-  my $self=shift();
-  $self->{'id'}=shift if @_;
-  $self->{'id'}=$self->document->nextId("s") unless defined $self->{"id"};
-  return $self->{'id'};
-}
-
-=head2 url
-
-=cut
-
-sub url {
-  my $self=shift;
-  return sprintf("#%s", $self->id);
-}
-
-=head2 document
-
-=cut
-
-sub document {shift->{"document"}};
 
 =head2 color
 
