@@ -3,7 +3,7 @@ WriteMakefile(
     NAME         => 'Geo::GoogleEarth::Pluggable',
     VERSION_FROM => 'lib/Geo/GoogleEarth/Pluggable.pm',
     AUTHOR       => 'Michael R. Davis (domain=>michaelrdavis,tld=>com,account=>perl)',
-    ABSTRACT     => 'Generates GoogleEarth Documents',
+    ABSTRACT_FROM=> 'lib/Geo/GoogleEarth/Pluggable.pm',
     PREREQ_PM    => {
                      'Test::Simple'             => 0.44,
                      'Scalar::Util'             => 0,

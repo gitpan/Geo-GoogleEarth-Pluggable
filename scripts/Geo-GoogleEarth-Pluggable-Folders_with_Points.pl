@@ -9,10 +9,13 @@ Geo-GoogleEarth-Pluggable-Folders_with_Points.pl - Geo-GoogleEarth-Pluggable Fol
 
 =cut
 
-my $document=Geo::GoogleEarth::Pluggable->new(name=>"My Document");
+my $document=Geo::GoogleEarth::Pluggable->new(
+               name=>"My Document",
+               description=>q{"this" is > 'that' & < the other %22.},
+             );
 foreach my $f (3,4,5,6) {
   my $folder=$document->Folder(name=>"My Folder $f", description=>"F$f Desc");
-  my $point=$folder->Point(name=>"My Point $f", lat=>"39.$f", lon=>"-77.$f"); 
+  my $point=$folder->Point(name=>"My Point $f", lat=>"39.$f", lon=>"-77.$f", description=>"<p>Point: <b>$f</b></p>"); 
 }
 #use Data::Dumper qw{Dumper};
 #print Dumper($document->structure);

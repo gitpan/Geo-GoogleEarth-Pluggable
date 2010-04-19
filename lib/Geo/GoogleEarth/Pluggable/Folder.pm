@@ -10,7 +10,7 @@ use base qw{Method::Autoload};
 
 use Geo::GoogleEarth::Pluggable::NetworkLink;
 
-our $VERSION ='0.09';
+our $VERSION ='0.10';
 
 =head1 NAME
 
@@ -98,6 +98,8 @@ sub node {
   my $self=shift;
   my @data=();
   push @data, E(name=>{}, $self->name) if defined $self->name;
+  push @data, E(description=>{}, $self->description)
+    if defined $self->description;
   push @data, E(open=>{}, $self->open) if defined $self->open;
   my @style=();
   my @stylemap=();

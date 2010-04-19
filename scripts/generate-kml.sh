@@ -1,8 +1,11 @@
 #!/usr/bin/perl
 use strict;
+use warnings;
 
+my $lint="";
+$lint=" | /usr/bin/xmllint --format - " if -x "/usr/bin/xmllint";
 while (my $file=shift) {
   next unless -r $file;
-  print qx{perl -Mblib $file > "$file.kml"};
+  printf "Running: %s\n", $file;
+  print qx{perl -Mblib $file $lint > "$file.kml"};
 }
-

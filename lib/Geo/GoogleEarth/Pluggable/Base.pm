@@ -39,6 +39,8 @@ sub new {
 
 =head1 METHODS
 
+=head2 initialize
+
 =cut
 
 sub initialize {

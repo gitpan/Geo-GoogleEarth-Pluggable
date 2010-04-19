@@ -1,11 +1,12 @@
 package Geo::GoogleEarth::Pluggable;
 use strict;
+use warnings;
 use base qw{Geo::GoogleEarth::Pluggable::Folder}; 
 use XML::LibXML::LazyBuilder qw{DOM E};
 use Archive::Zip qw{COMPRESSION_DEFLATED};
 use IO::Scalar qw{};
 
-our $VERSION='0.09';
+our $VERSION='0.10';
 
 =head1 NAME
 
@@ -234,7 +235,7 @@ sub header_kmz {
 
 =item Support for DateTime object in the constructor that is promoted to the LookAt object.
 
-=item Create a GPSPoint plugin (Promote tag as name and datetime to LookAt)
+=item Create a L<GPS::Point> plugin (Promote tag as name and datetime to LookAt)
 
 =back
 
@@ -252,7 +253,7 @@ For example:
 
 =head1 SUPPORT
 
-Try geo-perl email list.
+DavisNetworks.com supports all Perl applications including this package.
 
 =head1 AUTHOR
 
@@ -265,8 +266,7 @@ This program is free software licensed under the...
 
   The BSD License
 
-The full text of the license can be found in the
-LICENSE file included with this module.
+The full text of the license can be found in the LICENSE file included with this module.
 
 =head1 SEE ALSO
 

@@ -5,7 +5,7 @@ use warnings;
 use Scalar::Util qw{reftype blessed};
 use XML::LibXML::LazyBuilder qw{E};
 
-our $VERSION='0.09';
+our $VERSION='0.10';
 
 =head1 NAME
 
@@ -92,6 +92,8 @@ sub node {
   my $self=shift;
   my @element=();
   push @element, E(name=>{}, $self->name) if defined $self->name;
+  push @element, E(description=>{}, $self->description)
+    if defined $self->description;
   push @element, E(visibility=>{}, $self->visibility)
     if defined $self->visibility;
   push @element, E(styleUrl=>{}, $self->styleUrl) if defined $self->styleUrl;
