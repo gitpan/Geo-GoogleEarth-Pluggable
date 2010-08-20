@@ -9,6 +9,7 @@ Geo-GoogleEarth-Pluggable-LinearRing.pl - Geo::GoogleEarth::Pluggable LinearRing
 
 =cut
 
+my $type=shift || "kml";
 my $document=Geo::GoogleEarth::Pluggable->new(name=>"My Document");
 my @pt=(
          {lat=>38.5, lon=>-77.1},
@@ -22,4 +23,8 @@ push @pt, $pt[0]; #ring last = first
 $document->LinearRing(name=>"My LinearRing", coordinates=>\@pt);
 #use Data::Dumper qw{Dumper};
 #print Dumper($document->structure);
-print $document->render;
+if ($type eq "kmz") {
+  print $document->archive;
+} else {
+  print $document->render;
+}

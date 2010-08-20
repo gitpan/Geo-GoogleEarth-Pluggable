@@ -6,7 +6,7 @@ use XML::LibXML::LazyBuilder qw{DOM E};
 use Archive::Zip qw{COMPRESSION_DEFLATED};
 use IO::Scalar qw{};
 
-our $VERSION='0.10';
+our $VERSION='0.11';
 
 =head1 NAME
 
@@ -121,7 +121,7 @@ sub archive {
   my $azip=Archive::Zip->new;
   my $member=$azip->addString($self->render, "doc.kml");
   $member->desiredCompressionMethod(COMPRESSION_DEFLATED);
-  $member->desiredCompressionLevel(9);
+  #$member->desiredCompressionLevel(9); #RT60563, RT54827
 
   my $archive=q{};
   my $iosh=IO::Scalar->new( \$archive );

@@ -9,6 +9,7 @@ Geo-GoogleEarth-Pluggable-Folders_with_Points.pl - Geo-GoogleEarth-Pluggable Fol
 
 =cut
 
+my $type=shift || "kml";
 my $document=Geo::GoogleEarth::Pluggable->new(
                name=>"My Document",
                description=>q{"this" is > 'that' & < the other %22.},
@@ -19,4 +20,8 @@ foreach my $f (3,4,5,6) {
 }
 #use Data::Dumper qw{Dumper};
 #print Dumper($document->structure);
-print $document->render;
+if ($type eq "kmz") {
+  print $document->archive;
+} else {
+  print $document->render;
+}

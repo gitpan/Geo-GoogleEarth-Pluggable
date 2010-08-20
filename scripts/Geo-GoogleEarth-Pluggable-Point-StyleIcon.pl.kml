@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
   <Document>
-    <name>Style Example - 2010-04-19T19:08:50</name>
+    <name>Style Example - 2010-08-20T16:33:23</name>
     <Style id="Style-perl-0">
       <IconStyle>
         <color>ffc00000</color>

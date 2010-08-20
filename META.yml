@@ -1,10 +1,13 @@
-# http://module-build.sourceforge.net/META-spec.html
-#XXXXXXX This is a prototype!!!  It will change in the future!!! XXXXX#
-name:         Geo-GoogleEarth-Pluggable
-version:      0.10
-version_from: lib/Geo/GoogleEarth/Pluggable.pm
-installdirs:  site
-requires:
+--- #YAML:1.0
+name:                Geo-GoogleEarth-Pluggable
+version:             0.11
+abstract:            Generates GoogleEarth Documents
+license:             ~
+author:              
+    - Michael R. Davis (domain=>michaelrdavis,tld=>com,account=>perl)
+generated_by:        ExtUtils::MakeMaker version 6.42
+distribution_type:   module
+requires:     
     Archive::Zip:                  0
     base:                          0
     IO::Scalar:                    0
@@ -15,6 +18,6 @@ requires:
     Test::Simple:                  0.44
     warnings:                      0
     XML::LibXML::LazyBuilder:      0
-
-distribution_type: module
-generated_by: ExtUtils::MakeMaker version 6.30
+meta-spec:
+    url:     http://module-build.sourceforge.net/META-spec-v1.3.html
+    version: 1.3

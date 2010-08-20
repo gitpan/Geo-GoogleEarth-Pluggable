@@ -1,4 +1,8 @@
 #!/usr/bin/perl
+use strict;
+use warnings;
+use Geo::GoogleEarth::Pluggable;
+use DateTime;
 
 =head1 NAME
 
@@ -6,11 +10,7 @@ Geo-GoogleEarth-Pluggable-Point-StyleIcon.pl - Geo-GoogleEarth-Pluggable Icon St
 
 =cut
 
-use strict;
-use warnings;
-use Geo::GoogleEarth::Pluggable;
-use DateTime;
-
+my $type=shift || "kml";
 my $document=Geo::GoogleEarth::Pluggable->new(name=>sprintf("Style Example - %s", DateTime->now));
 
 my $IconStyleBlueDot=$document->IconStyle( #This is also simply IconStyleBlueDot()
@@ -27,4 +27,9 @@ my $point=$document->Point(
                        style => $IconStyleBlueDot,
                      );
 
-print $document->render;
+
+if ($type eq "kmz") {
+  print $document->archive;
+} else {
+  print $document->render;
+}
