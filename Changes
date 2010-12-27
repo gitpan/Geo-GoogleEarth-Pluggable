@@ -1,5 +1,9 @@
 Revision history for Perl module Geo::GoogleEarth::Pluggable
 
+0.12 2010-12-26
+  - Added snippet capability
+  - Added Snippet example
+  - Added tests
 0.11 2010-08-20
   - Removed desiredCompressionLevel setting due to bug RT54827 - RT60563
   - Added kmz option to all example scripts

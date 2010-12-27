@@ -10,8 +10,8 @@ Geo-GoogleEarth-Pluggable-Folder.pl - Geo-GoogleEarth-Pluggable Folder Example
 =cut
 
 my $type=shift || "kml";
-my $document=Geo::GoogleEarth::Pluggable->new(name=>"My Document");
-$document->NetworkLink(name=>"My NetworkLink", url=>"doc.kml");
+my $document=Geo::GoogleEarth::Pluggable->new(name=>"My Document", Snippet=>"The KMZ version is more interesting.");
+$document->NetworkLink(name=>"My NetworkLink", url=>"doc.kml", Snippet=>"My Snippet");
 #use Data::Dumper qw{Dumper};
 #print Dumper($document->structure);
 

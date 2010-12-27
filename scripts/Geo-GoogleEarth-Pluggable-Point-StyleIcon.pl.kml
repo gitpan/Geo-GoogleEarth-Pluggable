@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
   <Document>
-    <name>Style Example - 2010-08-20T16:33:23</name>
+    <name>Style Example - 2010-12-27T02:20:33</name>
+    <Snippet maxLines="0"/>
     <Style id="Style-perl-0">
       <IconStyle>
         <color>ffc00000</color>
@@ -14,6 +15,7 @@
     </Style>
     <Placemark>
       <name>Blue Point</name>
+      <Snippet maxLines="0"/>
       <styleUrl>#Style-perl-0</styleUrl>
       <Point>
         <coordinates>-77.1,39.1,0</coordinates>

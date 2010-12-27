@@ -6,7 +6,7 @@ use XML::LibXML::LazyBuilder qw{DOM E};
 use Archive::Zip qw{COMPRESSION_DEFLATED};
 use IO::Scalar qw{};
 
-our $VERSION='0.11';
+our $VERSION='0.12';
 
 =head1 NAME
 
@@ -16,10 +16,10 @@ Geo::GoogleEarth::Pluggable - Generates GoogleEarth Documents
 
   use Geo::GoogleEarth::Pluggable;
   my $document=Geo::GoogleEarth::Pluggable->new(%data); #is a special Folder...
-  my $folder  =$document->Folder(%data);                #L<Geo::GoogleEarth::Pluggable::Folder>
-  my $point   =$document->Point(%data);                 #L<Geo::GoogleEarth::Pluggable::Point>
-  my $netlink =$document->NetworkLink(%data);           #L<Geo::GoogleEarth::Pluggable::NetworkLink>
-  my $style   =$document->Style(%data);                 #L<Geo::GoogleEarth::Pluggable::Style>
+  my $folder  =$document->Folder(%data);                #isa Geo::GoogleEarth::Pluggable::Folder
+  my $point   =$document->Point(%data);                 #isa Geo::GoogleEarth::Pluggable::Point
+  my $netlink =$document->NetworkLink(%data);           #isa Geo::GoogleEarth::Pluggable::NetworkLink
+  my $style   =$document->Style(%data);                 #isa Geo::GoogleEarth::Pluggable::Style
   print $document->render;
 
 KML CGI Example
@@ -40,22 +40,20 @@ KMZ CGI Example
 
 Geo::GoogleEarth::Pluggable is a Perl object oriented interface that allows for the creation of XML documents that can be used with Google Earth.
 
-Geo::GoogleEarth::Pluggable is a L<Geo::GoogleEarth::Pluggable::Folder> with a render method.
+Geo::GoogleEarth::Pluggable (aka Document) is a L<Geo::GoogleEarth::Pluggable::Folder> with a render method.
 
 =head2 Object Inheritance Graph
 
   -- Base --- Folder    --- Document
-           ¦
-           +- Placemark --- Point
-           ¦             +- LineString
-           ¦             +- LinearRing
-           ¦
-           +- StyleBase --- Style
-           ¦             +- StyleMap
-           ¦
+           |
+           +- Placemark -+- Point
+           |             +- LineString
+           |             +- LinearRing
+           |
+           +- StyleBase -+- Style
+           |             +- StyleMap
+           |
            +- NetworkLink
-
-Note: Folder is also a L<Method::Autoload> object and Document is a L<Geo::GoogleEarth::Pluggable> object
 
 =head1 USAGE
 
@@ -243,13 +241,19 @@ sub header_kmz {
 
 Please log on RT and send to the geo-perl email list.
 
-=head1 LIMITS
+=head1 LIMITATIONS
+
+=head2 Not So Pretty XML
 
 The XML produced by L<XML::LibXML> is not "pretty".  If you need pretty XML you must pass the output through xmllint or a simular product.
 
 For example: 
 
   perl -MGeo::GoogleEarth::Pluggable -e "print Geo::GoogleEarth::Pluggable->new->render" | xmllint --format -
+
+=head2 Write Only
+
+This package can only write KML and KMZ files.  However, if you need to read KML files, please see the L<Geo::KML> package's C<from> method.
 
 =head1 SUPPORT
 
@@ -270,7 +274,7 @@ The full text of the license can be found in the LICENSE file included with this
 
 =head1 SEE ALSO
 
-L<XML::LibXML::LazyBuilder>, L<Archive::Zip>, L<IO::Scalar>
+L<Geo::KML>, L<XML::LibXML>, L<XML::LibXML::LazyBuilder>, L<Archive::Zip>, L<IO::Scalar>
 
 =cut
 

@@ -18,8 +18,12 @@ Makefile.PL
 MANIFEST
 README
 t/001_load.t
+t/002_document.t
+t/003_Folder.t
+t/003_Point.t
+t/004_Snippet.t
 Todo
-scripts/generate-kml.sh
+scripts/generate-kml.pl
 scripts/Geo-GoogleEarth-Pluggable-Folder.pl
 scripts/Geo-GoogleEarth-Pluggable-Folder.pl.kml
 scripts/Geo-GoogleEarth-Pluggable-Folder.pl.kmz
@@ -47,4 +51,8 @@ scripts/Geo-GoogleEarth-Pluggable-Point-StyleIcon.pl.kmz
 scripts/Geo-GoogleEarth-Pluggable-Point-StyleMapIcon.pl
 scripts/Geo-GoogleEarth-Pluggable-Point-StyleMapIcon.pl.kml
 scripts/Geo-GoogleEarth-Pluggable-Point-StyleMapIcon.pl.kmz
+scripts/Geo-GoogleEarth-Pluggable-Snippet.pl
+scripts/Geo-GoogleEarth-Pluggable-Snippet.pl.kml
+scripts/Geo-GoogleEarth-Pluggable-Snippet.pl.kmz
+perl-Geo-GoogleEarth-Pluggable.spec
 META.yml                                 Module meta-data (added by MakeMaker)

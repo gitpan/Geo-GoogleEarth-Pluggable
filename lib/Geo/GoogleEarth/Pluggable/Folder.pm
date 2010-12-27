@@ -98,6 +98,7 @@ sub node {
   my $self=shift;
   my @data=();
   push @data, E(name=>{}, $self->name) if defined $self->name;
+  push @data, E(Snippet=>{maxLines=>scalar(@{$self->Snippet})}, join("\n", @{$self->Snippet}));
   push @data, E(description=>{}, $self->description)
     if defined $self->description;
   push @data, E(open=>{}, $self->open) if defined $self->open;

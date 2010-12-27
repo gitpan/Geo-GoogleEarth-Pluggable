@@ -2,6 +2,7 @@
 <kml xmlns="http://www.opengis.net/kml/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
   <Document>
     <name>StyleMap Example</name>
+    <Snippet maxLines="0"/>
     <Style id="Style-perl-0">
       <IconStyle>
         <color>ffc00000</color>
@@ -30,6 +31,7 @@
     </StyleMap>
     <Placemark>
       <name>Style1 Point</name>
+      <Snippet maxLines="0"/>
       <styleUrl>#Style-perl-0</styleUrl>
       <Point>
         <coordinates>-77.037579,38.893873,0</coordinates>
@@ -37,6 +39,7 @@
     </Placemark>
     <Placemark>
       <name>StyleMap Point</name>
+      <Snippet maxLines="0"/>
       <styleUrl>#StyleMap-perl-2</styleUrl>
       <Point>
         <coordinates>-77.036579,38.893873,0</coordinates>
@@ -44,6 +47,7 @@
     </Placemark>
     <Placemark>
       <name>Style2 Point</name>
+      <Snippet maxLines="0"/>
       <styleUrl>#Style-perl-1</styleUrl>
       <Point>
         <coordinates>-77.035579,38.893873,0</coordinates>

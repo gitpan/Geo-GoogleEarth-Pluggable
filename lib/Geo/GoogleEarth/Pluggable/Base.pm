@@ -2,7 +2,7 @@ package Geo::GoogleEarth::Pluggable::Base;
 use warnings;
 use strict;
 
-our $VERSION='0.09';
+our $VERSION='0.12';
 
 =head1 NAME
 
@@ -88,27 +88,61 @@ sub description {
   return $self->{'description'};
 }
 
+=head2 Snippet
+
+Returns the Snippet used in the Snippet XML element or a Placemark.  The default Snippet from Google Earth is to use the first line of the description however this package defaults to a zero line Snippet.
+
+Snippet is rendered with maxLines as the length of the array ref and the content joined with new lines.
+
+Typical use
+
+  $document->Point(Snippet=>"Line 1");
+  $document->Point(Snippet=>["Line 1", "Line 2"]);
+
+Extended used
+
+  my $snippet=$placemark->Snippet;                     #[] always array reference
+  $placemark->Snippet([]);                             #default
+  $placemark->Snippet(["line 1", "line 2", "line 3"]); 
+  $placemark->Snippet("My Snippet Text");              #folded into array reference.
+  $placemark->Snippet("line 1", "line 2", "line 3");   #folded into array reference
+
+=cut
+
+sub Snippet {
+  my $self=shift;
+  if (@_ == 1) {
+    $self->{"Snippet"}=shift;
+  } elsif (@_ > 1) {
+    $self->{"Snippet"}=[@_];
+  }
+  #force undef to default empty array reference
+  $self->{"Snippet"}=[] unless defined $self->{"Snippet"};
+  #force to array reference
+  $self->{"Snippet"}=[$self->{"Snippet"}] unless ref($self->{"Snippet"}) eq "ARRAY";
+  return $self->{"Snippet"};
+}
+  
 =head1 BUGS
 
 Please log on RT and send to the geo-perl email list.
 
 =head1 SUPPORT
 
-Try geo-perl email list.
+DavisNetworks.com supports all Perl applications including this package.
 
 =head1 AUTHOR
 
-    Michael R. Davis (mrdvt92)
-    CPAN ID: MRDVT
+  Michael R. Davis (mrdvt92)
+  CPAN ID: MRDVT
 
 =head1 COPYRIGHT
 
 This program is free software licensed under the...
 
-	The BSD License
+  The BSD License
 
-The full text of the license can be found in the
-LICENSE file included with this module.
+The full text of the license can be found in the LICENSE file included with this module.
 
 =head1 SEE ALSO
 

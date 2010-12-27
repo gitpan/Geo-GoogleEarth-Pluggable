@@ -13,7 +13,7 @@ Geo::GoogleEarth::Pluggable::NetworkLink - Geo::GoogleEarth::Pluggable::NetworkL
 =head1 SYNOPSIS
 
   use Geo::GoogleEarth::Pluggable;
-  my $document=Geo::GoogleEarth::Pluggable->new();
+  my $document=Geo::GoogleEarth::Pluggable->new;
   $document->NetworkLink(url=>"./anotherdocument.cgi");
 
 =head1 DESCRIPTION
@@ -41,8 +41,9 @@ sub type {"NetworkLink"};
 
 sub node {
   my $self=shift;
-  my @element=();
+  my @element=(E(Snippet=>{maxLines=>scalar(@{$self->Snippet})}, join("\n", @{$self->Snippet})));
   foreach my $key (keys %$self) {
+    next if $key eq "Snippet";
     if ($key eq "url") { 
       push @element, E(Link=>{}, E(href=>{}, $self->url));
     } else {
@@ -75,7 +76,7 @@ Please log on RT and send to the geo-perl email list.
 
 =head1 SUPPORT
 
-Try geo-perl email list.
+DavisNetworks.com supports all Perl applications including this package.
 
 =head1 AUTHOR
 
@@ -88,8 +89,7 @@ This program is free software licensed under the...
 
   The BSD License
 
-The full text of the license can be found in the
-LICENSE file included with this module.
+The full text of the license can be found in the LICENSE file included with this module.
 
 =head1 SEE ALSO
 
