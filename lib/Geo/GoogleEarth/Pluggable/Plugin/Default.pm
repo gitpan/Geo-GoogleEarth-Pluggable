@@ -5,7 +5,7 @@ use Geo::GoogleEarth::Pluggable::Contrib::Point;
 use Geo::GoogleEarth::Pluggable::Contrib::LineString;
 use Geo::GoogleEarth::Pluggable::Contrib::LinearRing;
 
-our $VERSION='0.09';
+our $VERSION='0.13';
 
 =head1 NAME
 
@@ -86,7 +86,7 @@ Please log on RT and send to the geo-perl email list.
 
 =head1 SUPPORT
 
-Try geo-perl email list.
+DavisNetworks.com supports all Perl applications including this package.
 
 =head1 AUTHOR
 
@@ -99,8 +99,7 @@ This program is free software licensed under the...
 
   The BSD License
 
-The full text of the license can be found in the
-LICENSE file included with this module.
+The full text of the license can be found in the LICENSE file included with this module.
 
 =head1 SEE ALSO
 

@@ -194,6 +194,7 @@ sub point_normalize {
     $data->{'lat'}=$point->[1];
     $data->{'alt'}=$point->[2]||0;
   }
+  $data->{$_}+=0 foreach qw{lat lon alt}; #convert to number to "trim" strings that look like numbers.
   return wantarray ? %$data : $data;
 }
 

@@ -1,5 +1,8 @@
 Revision history for Perl module Geo::GoogleEarth::Pluggable
 
+0.13 2010-12-27
+  - Updated point_normalize to normalize strings with whitespace and look like numbers as white space is the delimiter in the "cooridnates" element.
+  - Updated Geo::GoogleEarth::Pluggable::Contrib::Point->subnode as well but why is this not using the point_normalize?
 0.12 2010-12-26
   - Added snippet capability
   - Added Snippet example

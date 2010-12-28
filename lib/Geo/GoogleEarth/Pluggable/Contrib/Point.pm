@@ -4,7 +4,7 @@ use XML::LibXML::LazyBuilder qw{E};
 use warnings;
 use strict;
 
-our $VERSION='0.09';
+our $VERSION='0.13';
 
 =head1 NAME
 
@@ -46,7 +46,7 @@ Geo::GoogleEarth::Pluggable::Contrib::Point is a L<Geo::GoogleEarth::Pluggable::
 
 sub subnode {
   my $self=shift;
-  my $coordinates=join(",", $self->lon, $self->lat, $self->alt);
+  my $coordinates=join(",", $self->lon+0, $self->lat+0, $self->alt+0);
   return E(Point=>{}, E(coordinates=>{}, $coordinates));
 }
 
@@ -101,7 +101,7 @@ Please log on RT and send to the geo-perl email list.
 
 =head1 SUPPORT
 
-Try geo-perl email list.
+DavisNetworks.com supports all Perl applications including this package.
 
 =head1 AUTHOR
 
@@ -114,8 +114,7 @@ This program is free software licensed under the...
 
   The BSD License
 
-The full text of the license can be found in the
-LICENSE file included with this module.
+The full text of the license can be found in the LICENSE file included with this module.
 
 =head1 SEE ALSO
 

@@ -7,8 +7,8 @@ BEGIN { use_ok( 'Geo::GoogleEarth::Pluggable' ); }
 my $document=Geo::GoogleEarth::Pluggable->new;
 isa_ok ($document, 'Geo::GoogleEarth::Pluggable');
 $document->{"xmlns"}={};
-my $point=$document->Point(lat=>38.89767,
-                           lon=>-77.03655,
+my $point=$document->Point(lat=> " 38.89767 ",
+                           lon=> " -77.03655 ",
                            name=>"White House");
 isa_ok($point, "Geo::GoogleEarth::Pluggable::Contrib::Point", '$document->Point');
 
