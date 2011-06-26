@@ -5,6 +5,7 @@ lib/Geo/GoogleEarth/Pluggable/Contrib/LinearRing.pm
 lib/Geo/GoogleEarth/Pluggable/Contrib/LineString.pm
 lib/Geo/GoogleEarth/Pluggable/Contrib/Point.pm
 lib/Geo/GoogleEarth/Pluggable/Folder.pm
+lib/Geo/GoogleEarth/Pluggable/LookAt.pm
 lib/Geo/GoogleEarth/Pluggable/NetworkLink.pm
 lib/Geo/GoogleEarth/Pluggable/Placemark.pm
 lib/Geo/GoogleEarth/Pluggable/Plugin/Default.pm

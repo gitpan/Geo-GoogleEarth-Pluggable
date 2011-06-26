@@ -9,8 +9,9 @@ use Module::Pluggable search_path => "Geo::GoogleEarth::Pluggable::Plugin";
 use base qw{Method::Autoload};
 
 use Geo::GoogleEarth::Pluggable::NetworkLink;
+use Geo::GoogleEarth::Pluggable::LookAt;
 
-our $VERSION ='0.10';
+our $VERSION ='0.14';
 
 =head1 NAME
 
@@ -76,6 +77,27 @@ Constructs a new NetworkLink object and appends it to the parent folder object. 
 sub NetworkLink {
   my $self=shift();
   my $obj=Geo::GoogleEarth::Pluggable::NetworkLink->new(document=>$self->document, @_);
+  $self->data($obj);
+  return $obj;
+}
+
+=head2 LookAt
+
+Constructs a new LookAt object and returns the object reference to assign to other object "lookat" properties.
+
+  $document->LookAt(
+                    latitude  => $lat,    #decimal degrees
+                    longitude => $lon,    #decimal degrees
+                    range     => $range,  #meters
+                    tilt      => $tilt,   #decimal degrees from veritical
+                    heading   => $header, #decimal degrees from North
+                   );
+
+=cut
+
+sub LookAt {
+  my $self=shift();
+  my $obj=Geo::GoogleEarth::Pluggable::LookAt->new(document=>$self->document, @_);
   $self->data($obj);
   return $obj;
 }

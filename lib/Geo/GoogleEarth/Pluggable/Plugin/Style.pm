@@ -5,7 +5,7 @@ use Scalar::Util qw{blessed};
 use warnings;
 use strict;
 
-our $VERSION='0.09';
+our $VERSION='0.14';
 
 =head1 NAME
 
@@ -15,7 +15,7 @@ Geo::GoogleEarth::Pluggable::Plugin::Style - Geo::GoogleEarth::Pluggable Style P
 
   use Geo::GoogleEarth::Pluggable;
   my $document=Geo::GoogleEarth::Pluggable->new;     #ISA L<Geo::GoogleEarth::Pluggable>
-  my $style=$document->StyleIcon(color=>{red=>255}); #ISA L<Geo::GoogleEarth::Pluggable::Style>
+  my $style=$document->IconStyle(color=>{red=>255}); #ISA L<Geo::GoogleEarth::Pluggable::Style>
   my $point=$document->Point(style=>$style);         #ISA L<Geo::GoogleEarth::Pluggable::Contrib::Point>
   print $document->render;
 
@@ -133,10 +133,10 @@ sub PolyStyle {
 
 =head2 LabelStyle
 
-  my $style=$folder->IconStyle(
-                               color => $color,
-                               scale => $scale,
-                              );
+  my $style=$folder->LabelStyle(
+                                color => $color,
+                                scale => $scale,
+                               );
 
 =cut
 
@@ -149,8 +149,8 @@ sub LabelStyle {
 
 =head2 ListStyle
 
-  my $style=$folder->IconStyle(
-                               href  => $url,
+  my $style=$folder->ListStyle(
+                               href => $url,
                               );
 
 =cut
@@ -175,12 +175,12 @@ Please log on RT and send to the geo-perl email list.
 This will construct 100 identical style objects
 
   foreach (1 .. 100) {
-    $document->Point(style=>$document->StyleIcon(color=>{red=>255}));
+    $document->Point(style=>$document->IconStyle(color=>{red=>255}));
   } 
 
 Do this instead
 
-  my $style=$document->StyleIcon(color=>{red=>255});
+  my $style=$document->IconStyle(color=>{red=>255});
   foreach (1 .. 100) {
     $document->Point(style=>$style);
   }

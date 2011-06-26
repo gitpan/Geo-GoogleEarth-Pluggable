@@ -1,5 +1,5 @@
 Name:           perl-Geo-GoogleEarth-Pluggable
-Version:        0.13
+Version:        0.14
 Release:        1%{?dist}
 Summary:        Generates GoogleEarth Documents
 License:        BSD

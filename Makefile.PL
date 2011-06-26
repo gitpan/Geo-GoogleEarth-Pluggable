@@ -12,8 +12,6 @@ WriteMakefile(
                      'Archive::Zip'             => 0,
                      'Method::Autoload'         => 0,
                      'Module::Pluggable'        => 0,
-                     'strict'                   => 0,
-                     'warnings'                 => 0,
-                     'base'                     => 0,
+                     'Package::New'             => 0,
                     },
 );

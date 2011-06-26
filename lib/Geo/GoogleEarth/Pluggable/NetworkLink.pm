@@ -4,7 +4,7 @@ use XML::LibXML::LazyBuilder qw{E};
 use warnings;
 use strict;
 
-our $VERSION='0.09';
+our $VERSION='0.14';
 
 =head1 NAME
 
@@ -42,14 +42,19 @@ sub type {"NetworkLink"};
 sub node {
   my $self=shift;
   my @element=(E(Snippet=>{maxLines=>scalar(@{$self->Snippet})}, join("\n", @{$self->Snippet})));
+  my @link=();
+  my %link=map {$_=>1} qw{href refreshMode refreshInterval viewRefreshMode viewRefreshTime viewBoundScale viewFormat httpQuery};
   foreach my $key (keys %$self) {
     next if $key eq "Snippet";
     if ($key eq "url") { 
-      push @element, E(Link=>{}, E(href=>{}, $self->url));
+      push @link, E(href=>{}, $self->url);
+    } elsif(exists $link{$key}) { #these go in the Link element
+      push @link, E($key=>{}, $self->{$key}) unless ref($self->{$key});
     } else {
       push @element, E($key=>{}, $self->{$key}) unless ref($self->{$key});
     }
   }
+  push @element, E(Link=>{}, @link) if @link;
   return E(NetworkLink=>{}, @element);
 }
 

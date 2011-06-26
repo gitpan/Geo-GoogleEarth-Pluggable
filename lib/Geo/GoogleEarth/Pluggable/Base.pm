@@ -1,8 +1,9 @@
 package Geo::GoogleEarth::Pluggable::Base;
 use warnings;
 use strict;
+use base qw{Package::New};
 
-our $VERSION='0.12';
+our $VERSION='0.14';
 
 =head1 NAME
 
@@ -26,27 +27,7 @@ The is the base of all Geo::GoogleEarth::Pluggable packages.
                                                   key2=>[value=>{opt1=>val1}],
                                                   key3=>{value=>{opt2=>val2}});
 
-=cut
-
-sub new {
-  my $this = shift();
-  my $class = ref($this) || $this;
-  my $self = {};
-  bless $self, $class;
-  $self->initialize(@_);
-  return $self;
-}
-
 =head1 METHODS
-
-=head2 initialize
-
-=cut
-
-sub initialize {
-  my $self = shift();
-  %$self=@_;
-}
 
 =head2 document
 
@@ -123,6 +104,18 @@ sub Snippet {
   return $self->{"Snippet"};
 }
   
+=head2 lookat
+
+Sets or returns a L<Geo::GoogleEarth::Pluggable::LookAt> object
+
+=cut
+
+sub lookat {
+  my $self=shift;
+  $self->{"lookat"}=shift if @_;
+  return $self->{"lookat"};
+}
+
 =head1 BUGS
 
 Please log on RT and send to the geo-perl email list.

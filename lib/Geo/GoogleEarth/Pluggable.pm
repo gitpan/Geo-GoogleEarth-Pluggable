@@ -6,7 +6,7 @@ use XML::LibXML::LazyBuilder qw{DOM E};
 use Archive::Zip qw{COMPRESSION_DEFLATED};
 use IO::Scalar qw{};
 
-our $VERSION='0.13';
+our $VERSION='0.14';
 
 =head1 NAME
 
@@ -19,6 +19,7 @@ Geo::GoogleEarth::Pluggable - Generates GoogleEarth Documents
   my $folder  =$document->Folder(%data);                #isa Geo::GoogleEarth::Pluggable::Folder
   my $point   =$document->Point(%data);                 #isa Geo::GoogleEarth::Pluggable::Point
   my $netlink =$document->NetworkLink(%data);           #isa Geo::GoogleEarth::Pluggable::NetworkLink
+  my $lookat  =$document->LookAt(%data);                #isa Geo::GoogleEarth::Pluggable::LookAt
   my $style   =$document->Style(%data);                 #isa Geo::GoogleEarth::Pluggable::Style
   print $document->render;
 
@@ -226,8 +227,6 @@ sub header_kmz {
 =head1 TODO
 
 =over
-
-=item Full support for LookAt
 
 =item Support for default Polygon and Line styles that are nicer than GoogleEarth's
 
