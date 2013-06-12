@@ -6,7 +6,7 @@ use XML::LibXML::LazyBuilder qw{DOM E};
 use Archive::Zip qw{COMPRESSION_DEFLATED};
 use IO::Scalar qw{};
 
-our $VERSION='0.14';
+our $VERSION='0.15';
 
 =head1 NAME
 
@@ -45,16 +45,32 @@ Geo::GoogleEarth::Pluggable (aka Document) is a L<Geo::GoogleEarth::Pluggable::F
 
 =head2 Object Inheritance Graph
 
-  -- Base --- Folder    --- Document
-           |
-           +- Placemark -+- Point
-           |             +- LineString
-           |             +- LinearRing
-           |
-           +- StyleBase -+- Style
-           |             +- StyleMap
-           |
-           +- NetworkLink
+  --- Constructor -+- Base --- Folder    --- Document
+                   |        |
+                   |        +- Placemark -+- Point
+                   |        |             +- LineString
+                   |        |             +- LinearRing
+                   |        |
+                   |        +- StyleBase -+- Style
+                   |        |             +- StyleMap
+                   |        |
+                   |        +- NetworkLink
+                   |
+                   +- LookAt
+
+=head2 Constructors that append to the parent folder object
+
+Folder, NetworkLink, Point, LineString, LinearRing
+
+=head2 Constructors that return objects for future use
+
+LookAt(), Style(), StyleMap()
+
+=head2 Wrappers (what makes it easy)
+
+Style => IconStyle, LineStyle, PolyStyle, LabelStyle, ListStyle
+
+Point => MultiPoint
 
 =head1 USAGE
 
@@ -198,7 +214,7 @@ sub header {
      $data{"content_type"}="application/vnd.google-earth.kml+xml"
        unless defined $data{"content_type"};
   my $header=sprintf("Content-type: %s\n", $data{"content_type"});
-     $header.=sprintf("Content-Disposition: attachment; filename=%s\n",
+     $header.=sprintf(qq{Content-Disposition: attachment; filename="%s";\n},
                          $data{"filename"}) if defined $data{"filename"};
      $header.="\n";
   return $header;

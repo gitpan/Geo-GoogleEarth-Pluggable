@@ -1,5 +1,5 @@
 Name:           perl-Geo-GoogleEarth-Pluggable
-Version:        0.14
+Version:        0.15
 Release:        1%{?dist}
 Summary:        Generates GoogleEarth Documents
 License:        BSD
@@ -10,12 +10,18 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Test::Simple) >= 0.44
+BuildRequires:  perl(Archive::Zip)
+BuildRequires:  perl(IO::Scalar)
+BuildRequires:  perl(Method::Autoload)
+BuildRequires:  perl(Module::Pluggable)
+BuildRequires:  perl(XML::LibXML::LazyBuilder)
+BuildRequires:  perl(Package::New)
 Requires:       perl(Archive::Zip)
 Requires:       perl(IO::Scalar)
 Requires:       perl(Method::Autoload)
 Requires:       perl(Module::Pluggable)
-Requires:       perl(Test::Simple) >= 0.44
 Requires:       perl(XML::LibXML::LazyBuilder)
+Requires:       perl(Package::New)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %description

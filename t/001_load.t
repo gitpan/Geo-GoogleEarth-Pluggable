@@ -1,12 +1,13 @@
 # -*- perl -*-
 
-use Test::More tests => 16;
+use Test::More tests => 17;
 
 BEGIN { use_ok( 'Geo::GoogleEarth::Pluggable' ); }
 
 my $object = Geo::GoogleEarth::Pluggable->new ();
 isa_ok ($object, 'Geo::GoogleEarth::Pluggable');
 
+BEGIN { use_ok( 'Geo::GoogleEarth::Pluggable::Constructor' ); }
 BEGIN { use_ok( 'Geo::GoogleEarth::Pluggable::Base' ); }
 BEGIN { use_ok( 'Geo::GoogleEarth::Pluggable::Contrib::LinearRing' ); }
 BEGIN { use_ok( 'Geo::GoogleEarth::Pluggable::Contrib::LineString' ); }

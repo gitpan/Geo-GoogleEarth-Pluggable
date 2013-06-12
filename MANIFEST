@@ -1,5 +1,6 @@
 Changes
 lib/Geo/GoogleEarth/Pluggable.pm
+lib/Geo/GoogleEarth/Pluggable/Constructor.pm
 lib/Geo/GoogleEarth/Pluggable/Base.pm
 lib/Geo/GoogleEarth/Pluggable/Contrib/LinearRing.pm
 lib/Geo/GoogleEarth/Pluggable/Contrib/LineString.pm

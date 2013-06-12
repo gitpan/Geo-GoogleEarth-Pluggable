@@ -1,7 +1,7 @@
 package Geo::GoogleEarth::Pluggable::LookAt;
 use strict;
 use warnings;
-use base qw{Package::New};
+use base qw{Geo::GoogleEarth::Pluggable::Constructor};
 use XML::LibXML::LazyBuilder qw{E};
 
 our $VERSION="0.14";
@@ -19,9 +19,23 @@ Geo::GoogleEarth::Pluggable::LookAt - Geo::GoogleEarth::Pluggable LookAt package
                                heading   => 0,
                                tilt      => 0,
                               );
-  $point->lookat($lookat);
-  $folder->lookat($lookat);
+
+Assign LookAt during construction
+
+  my $folder=$document->Folder(name=>"MyLook", lookat=>$lookat);
+  my $point=$folder->Point(lat=>$lat, lon=>$lon, lookat=>$lookat);
+
+Assign LookAt afer construction
+
   $document->lookat($lookat);
+  $folder->lookat($lookat);
+  $point->lookat($lookat);
+
+Do it all at one time
+
+  my $point=$folder->Point(lat    => $lat,
+                           lon    => $lon,
+                           lookat => $document->LookAt(%data));
 
 =head1 DESCRIPTION
 
@@ -31,7 +45,23 @@ Provides a way to configure a LookAt for all Folders and Placemarks.
 
 =head1 CONSTRUCTOR
 
+All Folder objects have a LookAt constructor.
+
+  my $object=$document->LookAt(%data);
+  my $object=$folder->LookAt(%data);
+
 =head2 new
+
+=head2 type
+
+Returns the object type.
+
+  my $type=$lookat->type;
+
+
+=cut
+
+sub type {"LookAt"};
 
 =head2 latitude
 

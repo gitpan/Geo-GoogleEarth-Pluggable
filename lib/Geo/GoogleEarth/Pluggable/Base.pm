@@ -1,7 +1,7 @@
 package Geo::GoogleEarth::Pluggable::Base;
 use warnings;
 use strict;
-use base qw{Package::New};
+use base qw{Geo::GoogleEarth::Pluggable::Constructor};
 
 our $VERSION='0.14';
 
@@ -28,14 +28,6 @@ The is the base of all Geo::GoogleEarth::Pluggable packages.
                                                   key3=>{value=>{opt2=>val2}});
 
 =head1 METHODS
-
-=head2 document
-
-Always returns the document object.  Every object should know what document it is in.
-
-=cut
-
-sub document {shift->{"document"}};
 
 =head2 name
 
